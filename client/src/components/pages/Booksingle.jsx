@@ -1,25 +1,54 @@
-// Booksingle.js
-import React from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import axios from "axios";
 
-const Booksingle = () => {
-    const { id } = useParams(); 
+const BookSingle = () => {
+  const [book, setBook] = useState({});
+  const { id } = useParams();
 
-    
-    
-  
-    return (
-        <div className="container mx-auto mt-5">
-          <h1>{id}</h1>
-            <div className="max-w-4xl mx-auto bg-white p-8 rounded shadow">
-                {/* <img src={book.image} alt={book.title} className="mx-auto rounded-lg" />
-                <h2 className="text-2xl font-bold mt-4">{book.title}</h2>
-                <p className="text-gray-600">by {book.author}</p>
-                <p className="text-gray-800 mt-2">Price: {book.price}</p>
-                <p className="text-gray-800 mt-4">{book.description}</p> */}
-            </div>
+  const fetchBookById = async () => {
+    try {
+      const response = await axios.get(`http://localhost:4000/books/${id}`);
+      if (response.status === 200) {
+        setBook(response.data[0]);
+      } else {
+        console.error("Error fetching data: ", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error fetching data: ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchBookById();
+  }, [id]);
+
+  return (
+    <div className="container mx-auto mt-5">
+      {book && (
+        <div className="max-w-4xl mx-auto bg-white p-8 rounded shadow">
+          <img
+            src={book.thumbnail}
+            alt={book.title}
+            className="mx-auto rounded-lg h-96"
+          />
+          <h2 className="text-2xl font-bold mt-4">{book.title}</h2>
+          <p className="text-gray-600">by {book.authors}</p>
+          <p className="text-gray-600">{book.publication}</p>
+          <p className="text-gray-800 mt-2">Price: ${book.price}</p>
+          <p className="text-gray-800 mt-4">{book.plot}</p>
+          <div className="mt-10">
+            <Link
+              to={"/checkout"}
+              className="rounded bg-red-600 text-white p-2  hover:bg-slate-900"
+            >
+              Buy now
+            </Link>
+          </div>
         </div>
-    );
-}
+      )}
+    </div>
+  );
+};
 
-export default Booksingle;
+export default BookSingle;
