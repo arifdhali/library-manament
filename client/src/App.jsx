@@ -9,7 +9,8 @@ import {
   Login,
   Booksingle,
   Error,
-  Checkout,
+  Cart,
+  Singup,
 } from "./components";
 
 const App = () => {
@@ -21,8 +22,9 @@ const App = () => {
           <Route exact path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Singup />} />
           <Route path="/books/:id" element={<Booksingle />} />
-          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/cart" element={<Cart />} />
           <Route path="*" element={<Error />} />
         </Routes>
       </main>

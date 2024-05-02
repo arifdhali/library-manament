@@ -36,7 +36,7 @@ const Book = (props) => {
             </Link>
             <Link
               onClick={handelCheckout}
-              to={"/checkout"}
+              to={`/cart/${book_id}`}
               className="rounded shadow-lg border-2 border-slate-600 hover:bg-white hover:text-red-600 bg-slate-600 px-5 py-1 text-white"
             >
               Buy Now

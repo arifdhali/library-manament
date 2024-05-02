@@ -70,12 +70,11 @@ const Login = () => {
                       </label>
                     </div>
                   </div>
-                  <a
-                    href="#"
+                  <Link to={"#"}                    
                     className="text-sm font-medium text-blue-600 hover:underline "
                   >
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
                 <button
                   type="submit"
@@ -85,12 +84,12 @@ const Login = () => {
                 </button>
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Don’t have an account yet?{" "}
-                  <a
-                    href="#"
+                  <Link
+                    to={"/signup"}
                     className="font-medium text-white hover:underline "
                   >
                     Sign up
-                  </a>
+                  </Link>
                 </p>
               </form>
             </div>

@@ -1,6 +1,6 @@
 import React from "react";
-import "./Checkout.css";
-const Checkout = () => {
+import "./cart.css";
+const Cart = () => {
   return (
     <div className="container mb-5 shadow-lg">
       <div className="group checkoutitems ">
@@ -26,4 +26,4 @@ const Checkout = () => {
   );
 };
 
-export default Checkout;
+export default Cart;
