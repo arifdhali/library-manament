@@ -12,7 +12,8 @@
 }
 
 
-small {
+small,
+.login-error {
     color: rgb(207, 47, 15);
     font-size: 15px !important;
     font-weight: 400;

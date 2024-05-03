@@ -1,8 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Signup = () => {
+  let redirect = useNavigate();
   const [errors, setErrors] = useState({});
+  const [error, setError] = useState();
   const [signup, setSignup] = useState({
     name: "",
     email: "",
@@ -35,23 +38,21 @@ const Signup = () => {
   const handelSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:4000/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(signup)
-      });
-
-      if (response.ok) {
-        console.log('Data saved successfully');
+      const response = await axios.post('http://localhost:4000/signup', signup);
+      if (response.status === 200) {
+        setError(response.data.message);
+        if (response.data.login) {
+          redirect("/")
+        }
       } else {
         console.error('Failed to save data');
       }
+
     } catch (error) {
       console.error('Error:', error);
     }
-  }
+  };
+
 
 
   return (
@@ -70,9 +71,9 @@ const Signup = () => {
                 Sign up for an account
               </h1>
 
-              <small>Show email exists error</small>
 
               <form className="space-y-4 md:space-y-6" action="/signup" method="post" onSubmit={handelSubmit}>
+                {error && <p className={`login-${error ? "error" : "success"}`}>{error}</p>}
                 <div>
                   <label
                     htmlFor="name"
