@@ -28,7 +28,7 @@ const userAuthentication = (req, res, next) => {
     }
 
 }
-app.get("/",  (req, res) => {
+app.get("/", (req, res) => {
     let sqlQuery = 'SELECT * FROM books_list'
     connection.query(sqlQuery, (err, result) => {
         if (err) {

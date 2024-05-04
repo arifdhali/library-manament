@@ -11,7 +11,10 @@ import {
   Error,
   Cart,
   Singup,
-} from "./components";
+  AddBook,
+  Author_admin,
+
+} from "./components/pages";
 import { DNA } from 'react-loader-spinner'
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -44,6 +47,8 @@ const App = () => {
               <Route path="/signup" element={<Singup />} />
               <Route path="/books/:id" element={<Booksingle />} />
               <Route path="/cart" element={<Cart />} />
+              <Route path="/add-book" element={<AddBook />} />
+              <Route path="/author" element={<Author_admin />} />
               <Route path="*" element={<Error />} />
             </Routes>
           </main>

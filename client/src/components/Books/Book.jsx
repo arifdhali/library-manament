@@ -17,7 +17,7 @@ const Book = (props) => {
             Name: <span className="font-normal">{title}</span>{" "}
           </h4>
           <h4 className="text-lg font-semibold">
-            Authore: <span className="font-normal">{authors}</span>{" "}
+            Author: <span className="font-normal">{authors}</span>{" "}
           </h4>
           <h4 className="text-lg font-semibold">
             Publish: <span className="font-normal"> {publication} </span>{" "}

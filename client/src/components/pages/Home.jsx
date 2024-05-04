@@ -12,11 +12,6 @@ const Home = () => {
       const response = await axios.get("http://localhost:4000/");
       if (response.status === 200) {
         setBooks(response.data);
-        console.log(response.data.login)
-        if (!response.data.login) {
-          redirect("/login");
-        }
-
       } else {
         console.error("Error fetching data: ", response.statusText);
       }

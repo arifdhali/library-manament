@@ -116,7 +116,7 @@ const Login = () => {
                   Don’t have an account yet?{" "}
                   <Link
                     to={"/signup"}
-                    className="font-medium text-white hover:underline "
+                    className="font-medium text-blue-600 hover:underline "
                   >
                     Sign up
                   </Link>
