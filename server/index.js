@@ -4,6 +4,7 @@ const cors = require('cors');
 const connection = require('./Config/config');
 const bcrypt = require('bcrypt');
 var session = require('express-session')
+const { v4: uuidv4 } = require('uuid');
 
 
 
@@ -17,6 +18,8 @@ app.use(session({
     saveUninitialized: true,
     cookie: { secure: true }
 }))
+
+
 
 // user authentication || middleware to handle login
 const userAuthentication = (req, res, next) => {
@@ -106,8 +109,8 @@ app.post("/signup", (req, res) => {
                 return res.json({ status: false, message: "Error generating or decrypt password" });
             }
 
-            let insertUser = 'INSERT INTO users (name, email, address, age, phone_number, gender, country, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-            connection.query(insertUser, [name, email, address, age, phone, gender, country, hash], (err, result) => {
+            let insertUser = 'INSERT INTO users (author_id,name, email, address, age, phone_number, gender, country, password) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)';
+            connection.query(insertUser, [uuidv4(), name, email, address, age, phone, gender, country, hash], (err, result) => {
                 if (err) {
                     return res.json({ status: false, message: err.message });
                 } else {
