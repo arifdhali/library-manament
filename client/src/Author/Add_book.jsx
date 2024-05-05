@@ -1,11 +1,13 @@
 import React from 'react'
+import Author_module from './Components/Author_module'
 
 const Add_book = () => {
     return (
         <>
+            <Author_module />
 
             <section className="add-book p-10">
-                <form className='w-4/12 m-autow-4/12 m-auto'>
+                <form className='w-3/5 m-autow-4/12 m-auto'>
                     <div className="space-y-12">
                         <div className="border-b border-gray-900/10 pb-12">
                             <h2 className="text-base font-semibold leading-7 text-gray-900">Add your book</h2>

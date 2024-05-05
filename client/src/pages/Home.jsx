@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Book from "../Books/Book";
+import Book from "../components/Books/Book";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 

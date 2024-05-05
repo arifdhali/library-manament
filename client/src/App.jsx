@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import {
   Header,
@@ -11,20 +11,19 @@ import {
   Error,
   Cart,
   Singup,
-  AddBook,
-  Author_admin,
+  AuthorRoutes,
+} from "./pages";
+import { DNA } from 'react-loader-spinner';
 
-} from "./components/pages";
-import { DNA } from 'react-loader-spinner'
 const App = () => {
   const [loading, setLoading] = useState(true);
-
+  const location = useLocation().pathname;
   useEffect(() => {
     setLoading(false);
-  }, []);
+  }, [location]);
 
   return (
-    <Router>
+    <>
       {loading ? (
         <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
           <DNA
@@ -38,7 +37,7 @@ const App = () => {
         </div>
       ) : (
         <>
-          <Header />
+          {renderHeader(location)}
           <main>
             <Routes>
               <Route exact path="/" element={<Home />} />
@@ -47,16 +46,22 @@ const App = () => {
               <Route path="/signup" element={<Singup />} />
               <Route path="/books/:id" element={<Booksingle />} />
               <Route path="/cart" element={<Cart />} />
-              <Route path="/add-book" element={<AddBook />} />
-              <Route path="/author" element={<Author_admin />} />
+              <Route path="/author/*" element={<AuthorRoutes />} />
               <Route path="*" element={<Error />} />
             </Routes>
           </main>
           <Footer />
         </>
       )}
-    </Router>
+    </>
   );
+};
+{/* rendering the header */ }
+
+const renderHeader = (pathname) => {
+  if (!pathname.includes('author')) {
+    return <Header />;
+  }
 };
 
 export default App;
