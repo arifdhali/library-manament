@@ -42,7 +42,7 @@ const Signup = () => {
       if (response.status === 200) {
         setError(response.data.message);
         if (response.data.login) {
-          redirect("/")
+          redirect("/author")
         }
       } else {
         console.error('Failed to save data');

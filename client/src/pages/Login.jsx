@@ -23,8 +23,9 @@ const Login = () => {
 
     try {
       const response = await axios.post('http://localhost:4000/signin', signin);
+      console.log(response.data.login)
       if (response.data.login) {
-        redirect("/");
+        redirect("/author")
       }
       setError(response.data.message);
     } catch (error) {

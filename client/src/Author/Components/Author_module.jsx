@@ -8,7 +8,7 @@ const Author_module = () => {
             <div className="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
                 <ul className="space-y-2 font-medium">
                     <li className='text-center mb-6'>
-                        <Link to={"/author"} className="mt-0  p-2 text-gray-900 rounded-lg group">
+                        <Link to={"/author"} className="mt-0  p-2 text-white rounded-lg group">
                             <img src={Logo} className='w-2/5 mb-3 mx-auto rounded-full shadow-xl' />
                             <strong>User name</strong>
                         </Link>
