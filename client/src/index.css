@@ -1,3 +1,9 @@
+#root {
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+}
+
 body {
     font-family: "Poppins", sans-serif;
 }
@@ -65,4 +71,19 @@ body {
 
 .contant_box_404 {
     margin-top: -50px;
+}
+
+
+/* Table status */
+.bookStatus {
+    position: relative;
+    color: #fff;
+}
+
+
+.bookStatus.activeBook {
+    background: #39ac31;
+}
+.bookStatus.deactiveBook {
+    background: #db3503;
 }

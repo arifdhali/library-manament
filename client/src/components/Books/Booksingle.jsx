@@ -44,6 +44,7 @@ const BookSingle = () => {
             >
               Buy now
             </Link>
+            <Link className="ms-2 rounded bg-blue-500 text-white p-2  hover:bg-gray-900" to={"/"}>Back</Link>
           </div>
         </div>
       )}

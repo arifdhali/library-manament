@@ -39,13 +39,8 @@ const Signup = () => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:4000/signup', signup);
-      if (response.status === 200) {
-        setError(response.data.message);
-        if (response.data.login) {
-          redirect("/author")
-        }
-      } else {
-        console.error('Failed to save data');
+      if (response.data.status) {
+        redirect('/login');
       }
 
     } catch (error) {

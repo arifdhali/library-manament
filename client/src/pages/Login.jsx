@@ -1,40 +1,76 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast, { Toaster } from 'react-hot-toast';
+
+const successLogin = (message) => {
+  return toast.success(message);
+};
+const errorLogin = (message) => {
+  return toast.error(message);
+};
 
 const Login = () => {
-  const redirect = useNavigate()
-  const [error, setError] = useState('');
-  const [signin, setsignin] = useState({
+  const navigate = useNavigate();
+  const [signin, setSignin] = useState({
     email: "",
     password: ""
   });
 
-  const handelSigninData = (e) => {
+  const handleSigninData = (e) => {
     const { name, value } = e.target;
-    setsignin({
+    setSignin({
       ...signin,
       [name]: value
     });
   };
 
-  const handelSignin = async (e) => {
+  axios.defaults.withCredentials = true;
+  const handleSignin = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:4000/signin', signin);
-      console.log(response.data.login)
-      if (response.data.login) {
-        redirect("/author")
+      const response = await axios.post('http://localhost:4000/login', signin);
+      if (response.data.status) {
+        successLogin(response.data.message)
+        navigate("/author");
+      } else {
+        errorLogin(response.data.message)
       }
-      setError(response.data.message);
+      console.log(response)
     } catch (error) {
       console.error('Error:', error);
+      setError('An error occurred during login.');
     }
   };
 
+
+
+  // get login
+
+  const handleLogin = async () => {
+    try {
+      let response = await axios.get("http://localhost:4000/login");
+      console.log(response);
+      if (response.data.status) {
+        navigate("/author");
+      }
+    } catch (err) {
+      console.log('Error on login page', err);
+    }
+  }
+
+
+
+  useEffect(() => {
+    handleLogin();
+  }, [])
+
+
+
   return (
     <>
+      <Toaster />
       <section className="bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col items-center justify-center px-6 md:h-dvh py-8 mx-auto lg:py-0">
           <Link to={"/"} className="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
@@ -45,8 +81,7 @@ const Login = () => {
               <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 Sign in to your account
               </h1>
-              <form className="space-y-4 md:space-y-6" onSubmit={handelSignin}>
-                {error && <p className={`login-${error ? "error" : "success"}`}>{error}</p>}
+              <form className="space-y-4 md:space-y-6" onSubmit={handleSignin}>
                 <div>
                   <label
                     htmlFor="email"
@@ -55,7 +90,7 @@ const Login = () => {
                     Your email
                   </label>
                   <input
-                    onChange={handelSigninData}
+                    onChange={handleSigninData}
                     type="email"
                     name="email"
                     id="email"
@@ -72,7 +107,7 @@ const Login = () => {
                     Password
                   </label>
                   <input
-                    onChange={handelSigninData}
+                    onChange={handleSigninData}
                     type="password"
                     name="password"
                     id="password"
@@ -109,7 +144,7 @@ const Login = () => {
                 </div>
                 <button
                   type="submit"
-                  className="w-full text-white bg-blue-600 "
+                  className="w-full text-white bg-blue-600"
                 >
                   Sign in
                 </button>

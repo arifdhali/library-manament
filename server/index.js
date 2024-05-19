@@ -3,34 +3,43 @@ const app = express();
 const cors = require('cors');
 const connection = require('./Config/config');
 const bcrypt = require('bcrypt');
-var session = require('express-session')
+const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
+const cookieParser = require('cookie-parser');
 
-
-
-app.use(cors());
-
+app.use(cookieParser());
+app.use(cors({
+    origin: "http://localhost:5173",
+    methods: 'GET,POST',
+    credentials: true,
+}));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(session({
-    secret: 'library test',
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: true }
-}))
+
 
 
 
 // user authentication || middleware to handle login
 const userAuthentication = (req, res, next) => {
 
-    if (!req.session.login) {
-        res.json({ login: false, message: "Please login" })
+    const { loginToken } = req.cookies;
+    if (!loginToken) {
+        console.log('direct access without login');
+        return res.json({ status: false, message: "You don't have account, please register" });
     } else {
-        next();
+        jwt.verify(loginToken, 'secretKey', (err, decode) => {
+            if (err) {
+                return res.json({ status: false, message: "Invalid token" });
+            } else {
+                req.user = decode.user;
+
+                next();
+            }
+        })
     }
 
 }
+
 app.get("/", (req, res) => {
     let sqlQuery = 'SELECT * FROM books_list'
     connection.query(sqlQuery, (err, result) => {
@@ -41,6 +50,7 @@ app.get("/", (req, res) => {
         }
     });
 });
+
 
 app.get("/books/:id", (req, res) => {
 
@@ -60,8 +70,19 @@ app.get("/books/:id", (req, res) => {
     })
 
 })
+
+app.get("/author", userAuthentication, (req, res) => {
+    return res.json({ status: true, author_data: req.user });
+})
+
+// login 
+app.get("/login", userAuthentication, (req, res) => {
+    return res.json({ status: true });
+})
+
+
 // sign in
-app.post("/signin", (req, res) => {
+app.post("/login", (req, res) => {
     const { email, password } = req.body;
 
     const emailQuery = 'SELECT * FROM users WHERE email = ?';
@@ -78,9 +99,11 @@ app.post("/signin", (req, res) => {
                 return res.json({ status: false, message: err.message });
             }
             if (result) {
-                req.session.user = user;
-                req.session.login = true;
-                return res.json({ status: true, message: "Login successful", login: req.session.login });
+                let token = jwt.sign({
+                    user,
+                }, 'secretKey', { expiresIn: '1h' });
+                res.cookie('loginToken', token);
+                return res.json({ status: true, message: "Login successful" });
             } else {
                 return res.json({ status: false, message: "Incorrect email or password." });
             }
@@ -114,14 +137,24 @@ app.post("/signup", (req, res) => {
                 if (err) {
                     return res.json({ status: false, message: err.message });
                 } else {
-                    req.session.user = email;
-                    req.session.login = true;
-                    return res.json({ status: true, message: "Successfully create your account", login: req.session.login });
+
+                    return res.json({ status: true, message: "Successfully create your account" });
                 }
             });
         });
     });
 });
+
+
+// app logout
+app.get('/logout', (req, res) => {
+    res.clearCookie('loginToken');
+    return res.status(200).json({ status: true, messge: 'Logout success' });
+})
+
+
+
+
 
 app.listen(4000, (err) => {
     if (err) {

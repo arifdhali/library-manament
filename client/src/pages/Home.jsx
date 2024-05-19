@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Home = () => {
   const redirect = useNavigate();
   const [books, setBooks] = useState([]);
-
+  axios.defaults.withCredentials = true;
   const getAllBooks = async () => {
     try {
       const response = await axios.get("http://localhost:4000/");
@@ -38,7 +38,7 @@ const Home = () => {
               </h2>
             </div>
             <div className="right">
-              <h3>Filter</h3>
+              <h3>Filter y</h3>
               <select name="" id="">
                 <option value="">New </option>
                 <option value="">New </option>
