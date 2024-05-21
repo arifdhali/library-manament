@@ -1,24 +1,18 @@
-import React, { useState, useEffect } from 'react'
-import { Route, Routes } from 'react-router-dom'
-import axios from 'axios'
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import { AddBook, AllBooks, Author } from './index';
+import { AuthorContextProvider } from '../context/AuthorContext/AuthorContext';
 
-import { AddBook, AllBooks, Author } from './index'
-
-
-const Author_routes = () => {
+const AuthorRoutes = () => {
     return (
-
-        <Routes>
-            <>
+        <AuthorContextProvider>
+            <Routes>
                 <Route path='/' element={<Author />} />
                 <Route path='/add-book' element={<AddBook />} />
                 <Route path='/all-books' element={<AllBooks />} />
-            </>
+            </Routes>
+        </AuthorContextProvider>
+    );
+};
 
-        </Routes>
-    )
-}
-
-export default Author_routes;
-
-
+export default AuthorRoutes;

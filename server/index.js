@@ -6,6 +6,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const cookieParser = require('cookie-parser');
+const multer = require('multer')
+
+
+
 
 app.use(cookieParser());
 app.use(cors({
@@ -75,6 +79,9 @@ app.get("/author", userAuthentication, (req, res) => {
     return res.json({ status: true, author_data: req.user });
 })
 
+
+
+
 // login 
 app.get("/login", userAuthentication, (req, res) => {
     return res.json({ status: true });
@@ -101,7 +108,7 @@ app.post("/login", (req, res) => {
             if (result) {
                 let token = jwt.sign({
                     user,
-                }, 'secretKey', { expiresIn: '1h' });
+                }, 'secretKey', { expiresIn: '1d' });
                 res.cookie('loginToken', token);
                 return res.json({ status: true, message: "Login successful" });
             } else {
@@ -146,14 +153,29 @@ app.post("/signup", (req, res) => {
 });
 
 
+// ADD BOOK
+app.post("/author/all-books", (req, res) => {
+    const { title, authors, publication, plot, themes, impact, legacy, thumbnail, price } = req.body;
+    const addSql = 'INSERT INTO books_list (title, authors,	publication,plot,themes,impact,legacy,price) VALUES (?,?,?,?,?,?,?,?)';
+
+    connection.query(addSql, [title, authors, publication, plot, themes, impact, legacy, price], (err, result) => {
+        if (err) {
+            return res.json({ status: false, message: "Error on send data to Database" });
+        } else {
+            return res.json({ status: true, message: "Successfully added new book" });
+        }
+
+    });
+});
+
+
+
+
 // app logout
 app.get('/logout', (req, res) => {
     res.clearCookie('loginToken');
     return res.status(200).json({ status: true, messge: 'Logout success' });
 })
-
-
-
 
 
 app.listen(4000, (err) => {
