@@ -28,7 +28,7 @@ const BookSingle = () => {
       {book && (
         <div className="max-w-4xl mx-auto bg-white p-8 rounded shadow">
           <img
-            src={book.thumbnail}
+            src={`http://localhost:4000/books/${book.thumbnail}`}
             alt={book.title}
             className="mx-auto rounded-lg h-96"
           />

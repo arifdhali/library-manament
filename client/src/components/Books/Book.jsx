@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Book = (props) => {
@@ -8,9 +8,10 @@ const Book = (props) => {
     console.log(e);
   };
 
+
   return (
     <div className="book-item shadow-lg p-5 rounded ">
-      <img className="mx-auto rounded" src={thumbnail} alt={title} />
+      <img className="mx-auto rounded" src={`http://localhost:4000/books/${thumbnail}`} alt={title} />
       <div className="book-desc">
         <div className=" mt-3">
           <h4 className="text-lg font-semibold">

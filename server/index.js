@@ -6,9 +6,10 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const cookieParser = require('cookie-parser');
-const multer = require('multer')
+const multer = require('multer');
+const path = require("path");
 
-
+app.use(express.static(path.join(__dirname, 'public/uploads')));
 
 
 app.use(cookieParser());
@@ -19,6 +20,23 @@ app.use(cors({
 }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+
+
+const storage = multer.diskStorage({
+    destination: function (req, res, cb) {
+        return cb(null, 'public/uploads/books');
+    },
+    filename: (req, file, cb) => {
+        return cb(
+            null,
+            `${file.fieldname}-${new Date().getTime()}-${file.originalname}`
+        );
+    }
+})
+
+const upload = multer({ storage: storage });
+
 
 
 
@@ -154,11 +172,13 @@ app.post("/signup", (req, res) => {
 
 
 // ADD BOOK
-app.post("/author/all-books", (req, res) => {
-    const { title, authors, publication, plot, themes, impact, legacy, thumbnail, price } = req.body;
-    const addSql = 'INSERT INTO books_list (title, authors,	publication,plot,themes,impact,legacy,price) VALUES (?,?,?,?,?,?,?,?)';
+app.post("/author/add-books", upload.single('thumbnail'), (req, res, next) => {
+    let fieldName = req.file.filename;
+    console.log(fieldName);
+    const { title, authors, publication, plot, themes, impact, legacy, price } = req.body;
+    const addSql = 'INSERT INTO books_list (title, authors,	publication,plot,themes,impact,legacy,thumbnail,price) VALUES (?,?,?,?,?,?,?,?,?)';
 
-    connection.query(addSql, [title, authors, publication, plot, themes, impact, legacy, price], (err, result) => {
+    connection.query(addSql, [title, authors, publication, plot, themes, impact, legacy, fieldName, price], (err, result) => {
         if (err) {
             return res.json({ status: false, message: "Error on send data to Database" });
         } else {
