@@ -30,14 +30,13 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:4000/login', signin);
+      const response = await axios.post('http://localhost:4000/login/', signin);
       if (response.data.status) {
         successLogin(response.data.message)
         navigate("/author");
       } else {
         errorLogin(response.data.message)
-      }
-      console.log(response)
+      }      
     } catch (error) {
       console.error('Error:', error);
       setError('An error occurred during login.');
@@ -50,8 +49,8 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      let response = await axios.get("http://localhost:4000/login");
-      console.log(response);
+      let response = await axios.get("http://localhost:4000/login/");
+      
       if (response.data.status) {
         navigate("/author");
       }

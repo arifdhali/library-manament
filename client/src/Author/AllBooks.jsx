@@ -41,7 +41,7 @@ const AllBooks = () => {
                             <td className="border py-2 px-8 border-slate-300">
                                 <select className='bookStatus deactiveBook px-5 py-2 focus-visible:border-0 focus-visible:outline-none' name="" id="">
                                     <option value="1">Active</option>
-                                    <option value="2" selected>Deactive</option>
+                                    <option value="2" defaultValue={0} >Deactive</option>
                                 </select>
 
 

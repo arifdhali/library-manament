@@ -1,15 +1,12 @@
-// src/components/Author_module.js
-import React, { useReducer } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Logo } from '../../pages';
 import axios from 'axios';
 import { useAuthorContext } from '../../context/AuthorContext/AuthorContext';
 
-
 const Author_module = () => {
-    // Author Context
-    const {username}  = useAuthorContext();
-
+    const { userinfo } = useAuthorContext();
+    const { name } = userinfo;
     const navigate = useNavigate();
     axios.defaults.withCredentials = true;
 
@@ -24,7 +21,6 @@ const Author_module = () => {
         }
     };
 
-
     return (
         <aside id="default-sidebar" className="bg-black fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0" aria-label="Sidebar">
             <div className="h-full px-3 py-4 overflow-y-auto bg-gray-5">
@@ -32,7 +28,7 @@ const Author_module = () => {
                     <li className='text-center mb-6 text-white'>
                         <Link to="/author" className="mt-0 p-2 text-gray rounded-lg group">
                             <img src={Logo} className='w-2/5 mb-3 mx-auto rounded-full shadow-xl' alt="Logo" />
-                            <strong>{username}</strong>
+                            <strong>{name}</strong>
                         </Link>
                     </li>
                     <li>

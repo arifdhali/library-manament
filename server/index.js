@@ -21,8 +21,6 @@ app.use(cors({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-
-
 const storage = multer.diskStorage({
     destination: function (req, res, cb) {
         return cb(null, 'public/uploads/books');
@@ -172,22 +170,25 @@ app.post("/signup", (req, res) => {
 
 
 // ADD BOOK
-app.post("/author/add-books", upload.single('thumbnail'), (req, res, next) => {
+app.post("/author/add-books", upload.single('thumbnail'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ status: false, message: "No file uploaded" });
+    }
+
     let fieldName = req.file.filename;
-    console.log(fieldName);
+    console.log(`Uploaded file name: ${fieldName}`);
     const { title, authors, publication, plot, themes, impact, legacy, price } = req.body;
-    const addSql = 'INSERT INTO books_list (title, authors,	publication,plot,themes,impact,legacy,thumbnail,price) VALUES (?,?,?,?,?,?,?,?,?)';
+
+    const addSql = 'INSERT INTO books_list (title, authors, publication, plot, themes, impact, legacy, thumbnail, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
     connection.query(addSql, [title, authors, publication, plot, themes, impact, legacy, fieldName, price], (err, result) => {
         if (err) {
-            return res.json({ status: false, message: "Error on send data to Database" });
+            return res.status(500).json({ status: false, message: "Error on send data to Database" });
         } else {
             return res.json({ status: true, message: "Successfully added new book" });
         }
-
     });
 });
-
 
 
 

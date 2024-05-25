@@ -5,32 +5,33 @@ import { useNavigate } from "react-router-dom";
 const AuthorContext = createContext(null);
 
 const AuthorContextProvider = ({ children }) => {
-    const redirect = useNavigate();
-    const [username, setUsername] = useState("No username");
-    const [login, isLogin] = useState(false);
+    const navigate = useNavigate();
+    const [userinfo, setUserinfo] = useState({ author_id: null, name: "No username" });
+    const [login, setLogin] = useState(false);
+
+    axios.defaults.withCredentials = true;
+
     const getAuthor = async () => {
         try {
-            const response = await axios.get('http://localhost:4000/author');
+            const response = await axios.get('http://localhost:4000/author/');
             if (response.data.status) {
-                isLogin(response.data.status)
-                setUsername(response.data.author_data.name)
+                setLogin(response.data.status);
+                const { author_id, name } = response.data.author_data;
+                setUserinfo({ author_id, name });
             } else {
-                redirect('/login')
+                navigate('/login');
             }
         } catch (error) {
             console.error('Error fetching author data:', error);
         }
     };
 
-
     useEffect(() => {
         getAuthor();
     }, []);
 
-
-
     return (
-        <AuthorContext.Provider value={{ username, login }}>
+        <AuthorContext.Provider value={{ userinfo, login }}>
             {children}
         </AuthorContext.Provider>
     );

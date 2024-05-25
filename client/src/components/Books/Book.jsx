@@ -26,7 +26,7 @@ const Book = (props) => {
         </div>
         <div className="text-center mt-6 flex justify-between items-center">
           <h4 className="text-lg font-semibold">
-            Rate:$<span className="font-normal">{price}</span>
+            Price:<span className="font-normal">${price}</span>
           </h4>
           <div className="flex gap-2 items-center">
             <Link

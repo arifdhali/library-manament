@@ -1,13 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import Author_module from './Components/Author_module'
-import { useAuthorContext } from '../context/AuthorContext/AuthorContext'
-
-
+import React from 'react';
+import { Link } from 'react-router-dom';
+import Author_module from './Components/Author_module';
+import { useAuthorContext } from '../context/AuthorContext/AuthorContext';
 
 const Author = () => {
-
     const { login } = useAuthorContext();
+
     return (
         <>
             {login && (
@@ -19,13 +17,12 @@ const Author = () => {
                         </svg>
                     </button>
                     <Author_module />
-
-                    <div className="p-4 sm:ml-64">
+                    <div className="p-4 sm:ml-64 author-dashboard">
                         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
                             <div className="grid grid-cols-3 gap-4 mb-4">
                                 <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
                                     <Link to={"all-books/"} className="text-2xl text-gray-400 dark:text-gray-500">
-                                        Publish boooks
+                                        Publish books
                                     </Link>
                                 </div>
                                 <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
@@ -48,14 +45,12 @@ const Author = () => {
                                     </svg>
                                 </p>
                             </div>
-
                         </div>
                     </div>
                 </>
-
             )}
         </>
-    )
-}
+    );
+};
 
 export default Author;
