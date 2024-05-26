@@ -6,8 +6,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 const cookieParser = require('cookie-parser');
-const multer = require('multer');
 const path = require("path");
+
+const uploadMulter = require('./Utils/multerConfig');
 
 app.use(express.static(path.join(__dirname, 'public/uploads')));
 
@@ -21,19 +22,7 @@ app.use(cors({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const storage = multer.diskStorage({
-    destination: function (req, res, cb) {
-        return cb(null, 'public/uploads/books');
-    },
-    filename: (req, file, cb) => {
-        return cb(
-            null,
-            `${file.fieldname}-${new Date().getTime()}-${file.originalname}`
-        );
-    }
-})
 
-const upload = multer({ storage: storage });
 
 
 
@@ -44,7 +33,6 @@ const userAuthentication = (req, res, next) => {
 
     const { loginToken } = req.cookies;
     if (!loginToken) {
-        console.log('direct access without login');
         return res.json({ status: false, message: "You don't have account, please register" });
     } else {
         jwt.verify(loginToken, 'secretKey', (err, decode) => {
@@ -52,7 +40,7 @@ const userAuthentication = (req, res, next) => {
                 return res.json({ status: false, message: "Invalid token" });
             } else {
                 req.user = decode.user;
-
+                logedInUser = decode.user;
                 next();
             }
         })
@@ -170,24 +158,52 @@ app.post("/signup", (req, res) => {
 
 
 // ADD BOOK
-app.post("/author/add-books", upload.single('thumbnail'), (req, res) => {
+let uploadBooks = uploadMulter('books'); // Multer upload folder name
+
+app.post("/author/add-books", userAuthentication, uploadBooks.single('thumbnail'), (req, res) => {
     if (!req.file) {
         return res.status(400).json({ status: false, message: "No file uploaded" });
     }
 
-    let fieldName = req.file.filename;
-    console.log(`Uploaded file name: ${fieldName}`);
+    const { filename: thumbnail } = req.file;
+    const { author_id } = req.user;
     const { title, authors, publication, plot, themes, impact, legacy, price } = req.body;
 
-    const addSql = 'INSERT INTO books_list (title, authors, publication, plot, themes, impact, legacy, thumbnail, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)';
-
-    connection.query(addSql, [title, authors, publication, plot, themes, impact, legacy, fieldName, price], (err, result) => {
+    const addSql = 'INSERT INTO books_list (user_id, title, authors, publication, plot, themes, impact, legacy, thumbnail, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+    let value = [
+        author_id, title, authors, publication, plot, themes, impact, legacy, thumbnail, price
+    ]
+    connection.query(addSql, value, (err, result) => {
         if (err) {
-            return res.status(500).json({ status: false, message: "Error on send data to Database" });
+            return res.status(500).json({ status: false, message: "Error sending data to Database" });
         } else {
             return res.json({ status: true, message: "Successfully added new book" });
         }
     });
+});
+
+
+// All books 
+app.get("/author/all-books", userAuthentication, (req, res) => {
+    const { author_id } = req.user;
+
+    // get all books from this author_id
+    let sql = 'SELECT * FROM books_list WHERE user_id = ?';
+
+    connection.query(sql, [author_id], (err, result) => {
+        if (err) {
+            return res.json({
+                status: false,
+                message: "Error on getting all books informations"
+
+            })
+        } else {
+            return res.json({
+                status: true,
+                all_books: result,
+            })
+        }
+    })
 });
 
 

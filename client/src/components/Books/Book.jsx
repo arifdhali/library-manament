@@ -23,29 +23,28 @@ const Book = (props) => {
           <h4 className="text-lg font-semibold">
             Publish: <span className="font-normal"> {publication} </span>{" "}
           </h4>
-        </div>
-        <div className="text-center mt-6 flex justify-between items-center">
           <h4 className="text-lg font-semibold">
             Price:<span className="font-normal">${price}</span>
           </h4>
-          <div className="flex gap-2 items-center">
-            <Link
-              to={`/books/${book_id}`}
-              className="hover:bg-black hover:border-black rounded border-2 border-sky-600 px-5 py-1 text-white bg-sky-600"
-            >
-              View
-            </Link>
-            <Link
-              onClick={handelCheckout}
-              to={`/cart/${book_id}`}
-              className="rounded shadow-lg border-2 border-slate-600 hover:bg-white hover:text-red-600 bg-slate-600 px-5 py-1 text-white"
-            >
-              Buy Now
-            </Link>
-          </div>
+        </div>
+
+        <div className="flex mt-6 justify-between gap-2 items-center w-100">
+          <Link
+            to={`/books/${book_id}`}
+            className="hover:bg-black hover:border-black rounded border-2 border-sky-600 px-5 py-1 text-white bg-sky-600"
+          >
+            View
+          </Link>
+          <Link
+            onClick={handelCheckout}
+            to={`/cart/${book_id}`}
+            className="rounded shadow-lg border-2 border-slate-600 hover:bg-white hover:text-red-600 bg-slate-600 px-5 py-1 text-white"
+          >
+            Buy
+          </Link>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

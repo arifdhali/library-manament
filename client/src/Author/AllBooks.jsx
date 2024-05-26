@@ -1,7 +1,26 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Author_module from './Components/Author_module'
+import axios from 'axios';
 
 const AllBooks = () => {
+    const [allBooks, setAllBooks] = useState([]);
+    const getAllBooks = async () => {
+        try {
+            const response = await axios.get("http://localhost:4000/author/all-books");
+            if (response.status === 200) {
+                setAllBooks(response.data.all_books);
+            } else {
+                console.error("Error fetching data: ", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error fetching data: ", error);
+        }
+    };
+
+    useEffect(() => {
+        getAllBooks();
+    }, []);
+
     return (
         <>
             <Author_module />
@@ -18,38 +37,36 @@ const AllBooks = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td className="border py-2 px-8 border-slate-300">Booke name</td>
-                            <td className="border py-2 px-8 border-slate-300">12-03-2021</td>
-                            <td className="border py-2 px-8 border-slate-300"> <span>₹</span> 500</td>
-                            <td className="border py-2 px-8 border-slate-300">
-                                <select className='bookStatus activeBook px-5 py-2 focus-visible:border-0 focus-visible:outline-none' name="" id="">
-                                    <option value="1">Active</option>
-                                    <option value="2">Deactive</option>
-                                </select>
+
+                        {
+                            allBooks && allBooks.map((book) => {
+
+                                const { book_id, title, publication, price, status } = book;
+                                return (
+
+                                    <tr key={book_id}>
+                                        <td className="border py-2 px-8 border-slate-300">{title}</td>
+                                        <td className="border py-2 px-8 border-slate-300">{publication}</td>
+                                        <td className="border py-2 px-8 border-slate-300"> <span>₹</span> {price}</td>
+                                        <td className="border py-2 px-8 border-slate-300">
+                                            <select className={`bookStatus ${status ? "activeBook" : "deactiveBook"} px-5 py-2 focus-visible:border-0 focus-visible:outline-none`} name="" id="">
+                                                <option value="1">Active</option>
+                                                <option value="0">Deactive</option>
+                                            </select>
 
 
-                            </td>
-                            <td className='text-center border border-slate-300'>
-                                <button className='px-2 py-2 w-1/3 text-white bg-red-600'>X</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className="border py-2 px-8 border-slate-300">Booke name</td>
-                            <td className="border py-2 px-8 border-slate-300">12-03-2021</td>
-                            <td className="border py-2 px-8 border-slate-300"><span>₹</span> 200</td>
-                            <td className="border py-2 px-8 border-slate-300">
-                                <select className='bookStatus deactiveBook px-5 py-2 focus-visible:border-0 focus-visible:outline-none' name="" id="">
-                                    <option value="1">Active</option>
-                                    <option value="2" defaultValue={0} >Deactive</option>
-                                </select>
+                                        </td>
+                                        <td className='text-center border border-slate-300'>
+                                            <button className='px-2 py-2 w-1/3 text-white bg-red-600'>X</button>
+                                        </td>
+                                    </tr>
+
+                                )
+
+                            })
+                        }
 
 
-                            </td>
-                            <td className='text-center border  border-slate-300'>
-                                <button className='px-2 py-2 w-1/3 text-white bg-red-600'>X</button>
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </section>

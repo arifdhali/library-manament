@@ -18,6 +18,7 @@ body {
 }
 
 
+
 .logout {
     position: absolute;
     bottom: 0;
@@ -86,4 +87,9 @@ body {
 }
 .bookStatus.deactiveBook {
     background: #db3503;
+}
+
+.book-item img{
+    height: 200px;
+
 }
