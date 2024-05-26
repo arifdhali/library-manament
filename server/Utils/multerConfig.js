@@ -1,5 +1,5 @@
-const multer = require('multer');
-const path = require('path');
+const multer = require("multer");
+const path = require("path");
 
 const multerStorgeHandle = (folderName) => {
     const storage = multer.diskStorage({
@@ -9,20 +9,17 @@ const multerStorgeHandle = (folderName) => {
         filename: (req, file, cb) => {
             return cb(
                 null,
-                `${file.fieldname}-${new Date().getTime()}-${file.originalname}`
+                `${file.fieldname}-${file.originalname}`
             );
-        }
-    })
+        },
+    });
     return storage;
-
-}
-
-
+};
 
 const uploadMulter = (folder) => {
     return multer({
-        storage: multerStorgeHandle(folder)
-    })
-}
+        storage: multerStorgeHandle(folder),
+    });
+};
 
 module.exports = uploadMulter;

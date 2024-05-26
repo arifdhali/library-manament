@@ -6,11 +6,13 @@ const AuthorContext = createContext(null);
 
 const AuthorContextProvider = ({ children }) => {
     const navigate = useNavigate();
+    const [bookCount, setBookCount] = useState('');
     const [userinfo, setUserinfo] = useState({ author_id: null, name: "No username" });
     const [login, setLogin] = useState(false);
 
     axios.defaults.withCredentials = true;
 
+    // Get author
     const getAuthor = async () => {
         try {
             const response = await axios.get('http://localhost:4000/author/');
@@ -26,12 +28,27 @@ const AuthorContextProvider = ({ children }) => {
         }
     };
 
+    // Get all books
+    const getAllBooks = async () => {
+        try {
+            const response = await axios.get('http://localhost:4000/author/all-books');
+            let { status, all_books } = response.data;
+            if (status) {
+                setBookCount(all_books.length);
+            }
+        } catch (error) {
+            console.error('Error fetching author data:', error);
+        }
+    };
+
+
     useEffect(() => {
         getAuthor();
+        getAllBooks()
     }, []);
 
     return (
-        <AuthorContext.Provider value={{ userinfo, login }}>
+        <AuthorContext.Provider value={{ userinfo, login, bookCount }}>
             {children}
         </AuthorContext.Provider>
     );

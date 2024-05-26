@@ -13,7 +13,7 @@ import {
   Singup,
   AuthorRoutes,
 } from "./pages";
-import { DNA } from 'react-loader-spinner';
+import { DNA } from "react-loader-spinner";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -25,7 +25,14 @@ const App = () => {
   return (
     <>
       {loading ? (
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+          }}
+        >
           <DNA
             visible={true}
             height="80"
@@ -56,10 +63,12 @@ const App = () => {
     </>
   );
 };
-{/* rendering the header */ }
+{
+  /* rendering the header */
+}
 
 const renderHeader = (pathname) => {
-  if (!pathname.includes('author')) {
+  if (!pathname.includes("author")) {
     return <Header />;
   }
 };

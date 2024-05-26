@@ -38,8 +38,8 @@ const Home = () => {
               </h2>
             </div>
             <div className="right">
-              <h3>Filter y</h3>
-              <select name="" id="">
+              <h3>Filter</h3>
+              <select className="border border-indigo-600" name="" id="">
                 <option value="">New </option>
                 <option value="">New </option>
                 <option value="">New </option>
