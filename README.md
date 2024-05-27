@@ -1,9 +1,10 @@
+PROJECT NAME: Library system fully functionality
+
 Frontend->  1. Tailwind css
             2. React
 Backend->   1. Node js and Express js
 Database->  1. Mysql
 
-</> Library system
 
 </> Frontend (React):
 
