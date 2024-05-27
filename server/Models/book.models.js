@@ -1,17 +1,34 @@
+// models/bookModel.js
 const connection = require('../Config/config');
-const bookModel = ((callback) => {
-    let sqlQuery = 'SELECT * FROM books_list'
-    connection.query(sqlQuery, (err, result) => {
-        if (err) {
-            return callback(err, null);
-        } else {
-            return callback(null, result);
-        }
-    });
-})
+
+const Book = {
+    getAllActiveBooks: ((res) => {
+        let sql = 'SELECT * FROM books_list WHERE status = true';
+
+        connection.query(sql, (err, result) => {
+            if (err) {
+                return res(err, null);
+            } else {
+                return res(null, result);
+            }
+
+        })
+
+    }),
+
+    getSingleBooks: ((bookID, res) => {
+        let singleQyery = "select * from books_list where book_id = ?";
+        connection.query(singleQyery, [bookID], (err, result) => {
+            if (err) {
+                return res(err, null);
+            } else {
+                return res(null, result);
+            }
+        })
+
+    })
 
 
+};
 
-module.exports = bookModel;
-
-
+module.exports = Book;

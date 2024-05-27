@@ -8,6 +8,9 @@ const { v4: uuidv4 } = require("uuid");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
+const homeRoutes = require("./Routers/home.routes");
+const bookRoutes = require("./Routers/book.routes");
+
 const uploadMulter = require("./Utils/multerConfig");
 
 app.use(express.static(path.join(__dirname, "public/uploads")));
@@ -44,32 +47,12 @@ const userAuthentication = (req, res, next) => {
     }
 };
 
-app.get("/", (req, res) => {
-    let sqlQuery = "SELECT * FROM books_list WHERE status = true";
-    connection.query(sqlQuery, (err, result) => {
-        if (err) {
-            return res.json({ status: false, message: err.message });
-        } else {
-            return res.json({ status: true, data: result });
-        }
-    });
-});
 
-app.get("/books/:id", (req, res) => {
-    const bookID = req.params.id;
+// Home routes
+app.use("/", homeRoutes);
 
-    let sqlqyery = "select * from books_list where book_id = ?";
-
-    connection.query(sqlqyery, [bookID], (err, result) => {
-        if (err) {
-            console.error("Error executing query:", err);
-            res.status(500).send("Internal Server Error");
-            return;
-        }
-
-        return res.json(result);
-    });
-});
+// Single page Book
+app.use('/book', bookRoutes);
 
 app.get("/author", userAuthentication, (req, res) => {
     return res.json({ status: true, author_data: req.user });

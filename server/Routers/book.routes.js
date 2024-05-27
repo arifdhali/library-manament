@@ -1,8 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const bookController = require('../Controllers/book.controllers');
+const singleBookController = require("../Controllers/singlePage.controller");
 
-router.use("/", bookController);
+// single page
+router.get("/:id", singleBookController);
+
 
 
 module.exports = router;

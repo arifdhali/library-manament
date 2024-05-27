@@ -30,7 +30,7 @@ const Book = (props) => {
 
         <div className="flex mt-6 justify-between gap-2 items-center w-100">
           <Link
-            to={`/books/${book_id}`}
+            to={`/book/${book_id}`}
             className="hover:bg-black hover:border-black rounded border-2 border-sky-600 px-5 py-1 text-white bg-sky-600"
           >
             View

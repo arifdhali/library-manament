@@ -8,7 +8,8 @@ const BookSingle = () => {
 
   const fetchBookById = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/books/${id}`);
+      const response = await axios.get(`http://localhost:4000/book/${id}`);
+      console.log(response)
       if (response.status === 200) {
         setBook(response.data[0]);
       } else {

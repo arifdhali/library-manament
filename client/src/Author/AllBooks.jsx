@@ -6,6 +6,7 @@ import { MdDelete } from "react-icons/md";
 
 
 import toast, { Toaster } from 'react-hot-toast';
+import { Link } from 'react-router-dom';
 
 const AllBooks = () => {
     const [allBooks, setAllBooks] = useState([]);
@@ -50,9 +51,11 @@ const AllBooks = () => {
         }
     };
 
+
     useEffect(() => {
         getAllBooks()
-    }, [allBooks]);
+        console.log(allBooks.length)
+    }, []);
 
     return (
         <>
@@ -70,36 +73,44 @@ const AllBooks = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {allBooks && allBooks.map((book) => {
-                            const { book_id, title, publication, price, status } = book;
-                            return (
-                                <tr key={book_id}>
-                                    <td className="border py-2 px-8 border-slate-300">{title}</td>
-                                    <td className="border py-2 px-8 border-slate-300">{publication}</td>
-                                    <td className="border py-2 px-8 border-slate-300"><span>₹</span> {price}</td>
-                                    <td className="border py-2 px-8 border-slate-300">
-                                        <form className="update-status" onSubmit={(e) => e.preventDefault()}>
-                                            <select
-                                                onChange={(e) => handleStatus(e, book_id)}
-                                                className={`bookStatus ${status === 1 ? "activeBook" : "deactiveBook"} px-5 py-2 focus-visible:border-0 focus-visible:outline-none`}
-                                                value={status}
-                                            >
-                                                <option value="1">Active</option>
-                                                <option value="0">Deactive</option>
-                                            </select>
-                                        </form>
-                                    </td>
-                                    <td className="text-center border border-slate-300">
-                                        <div className='flex align-center gap-3 justify-center '>
-                                            <button className="text w-1/3 text-white bg-green-600"><FaRegEdit className='mx-auto text-lg' />
-                                            </button>
-                                            <button className="w-1/3 text-white bg-red-600"><MdDelete className='mx-auto text-lg' />
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            );
-                        })}
+
+                        {allBooks && allBooks.length > 0 ? (
+                            allBooks.map((book) => {
+                                const { book_id, title, publication, price, status } = book;
+                                return (
+                                    <tr key={book_id}>
+                                        <td className="border py-2 px-8 border-slate-300">{title}</td>
+                                        <td className="border py-2 px-8 border-slate-300">{publication}</td>
+                                        <td className="border py-2 px-8 border-slate-300"><span>₹</span> {price}</td>
+                                        <td className="border py-2 px-8 border-slate-300">
+                                            <form className="update-status" onSubmit={(e) => e.preventDefault()}>
+                                                <select
+                                                    onChange={(e) => handleStatus(e, book_id)}
+                                                    className={`bookStatus ${status === 1 ? "activeBook" : "deactiveBook"} px-5 py-2 focus-visible:border-0 focus-visible:outline-none`}
+                                                    value={status}
+                                                >
+                                                    <option value="1">Active</option>
+                                                    <option value="0">Deactive</option>
+                                                </select>
+                                            </form>
+                                        </td>
+                                        <td className="text-center border border-slate-300">
+                                            <div className='flex align-center gap-3 justify-center '>
+                                                <Link to={`/edit/${book_id}`} className="text w-1/3 p-2 rounded-lg text-white bg-sky-600 ">
+                                                    <FaRegEdit className='mx-auto text-lg h-100' />
+                                                </Link>
+                                                <Link to={`/delete/${book_id}`} className="w-1/3 p-2 rounded-lg text-white bg-pink-600"><MdDelete className='mx-auto text-lg h-100' />
+                                                </Link>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                );
+                            })
+                        ) : (
+                            <tr >
+                                <td colSpan={5} className="border py-2 px-8 border-slate-300 text-center text-xl text-red-600 text-600">No Book available</td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
             </section>
