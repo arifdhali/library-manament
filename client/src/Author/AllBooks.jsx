@@ -3,14 +3,12 @@ import Author_module from './Components/Author_module';
 import axios from 'axios';
 import { FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-
-
 import toast, { Toaster } from 'react-hot-toast';
 import { Link } from 'react-router-dom';
 
 const AllBooks = () => {
     const [allBooks, setAllBooks] = useState([]);
-    const [status, setStatus] = useState({ status: "" });
+
     const successLogin = (message) => toast.success(message);
     const errorLogin = (message) => toast.error(message);
 
@@ -18,7 +16,11 @@ const AllBooks = () => {
         try {
             const response = await axios.get("http://localhost:4000/author/all-books");
             if (response.status === 200) {
-                setAllBooks(response.data.all_books);
+                const books = response.data.all_books.map(book => ({
+                    ...book,
+                    status: book.status.toString() // Ensure status is a string
+                }));
+                setAllBooks(books);
             } else {
                 console.error("Error fetching data: ", response.statusText);
             }
@@ -28,19 +30,21 @@ const AllBooks = () => {
     };
 
     axios.defaults.withCredentials = true;
+
     const handleStatus = async (e, book_id) => {
         const { value } = e.target;
-        setStatus((prev) => ({
-            ...prev,
-            status: value
-        }));
 
         try {
             const response = await axios.patch(`http://localhost:4000/author/all-books/${book_id}`, {
                 status: value
             });
             if (response.status === 200) {
-                successLogin(response.data.message)
+                successLogin(response.data.message);
+                setAllBooks((prevBooks) => 
+                    prevBooks.map(book => 
+                        book.book_id === book_id ? { ...book, status: value } : book
+                    )
+                );
             } else {
                 errorLogin(response.data.message);
                 console.error("Error updating status: ", response.statusText);
@@ -51,10 +55,8 @@ const AllBooks = () => {
         }
     };
 
-
     useEffect(() => {
-        getAllBooks()
-        console.log(allBooks.length)
+        getAllBooks();
     }, []);
 
     return (
@@ -73,7 +75,6 @@ const AllBooks = () => {
                         </tr>
                     </thead>
                     <tbody>
-
                         {allBooks && allBooks.length > 0 ? (
                             allBooks.map((book) => {
                                 const { book_id, title, publication, price, status } = book;
@@ -86,7 +87,7 @@ const AllBooks = () => {
                                             <form className="update-status" onSubmit={(e) => e.preventDefault()}>
                                                 <select
                                                     onChange={(e) => handleStatus(e, book_id)}
-                                                    className={`bookStatus ${status === 1 ? "activeBook" : "deactiveBook"} px-5 py-2 focus-visible:border-0 focus-visible:outline-none`}
+                                                    className={`bookStatus ${status === "1" ? "activeBook" : "deactiveBook"} px-5 py-2 focus-visible:border-0 focus-visible:outline-none`}
                                                     value={status}
                                                 >
                                                     <option value="1">Active</option>
@@ -99,7 +100,8 @@ const AllBooks = () => {
                                                 <Link to={`/edit/${book_id}`} className="text w-1/3 p-2 rounded-lg text-white bg-sky-600 ">
                                                     <FaRegEdit className='mx-auto text-lg h-100' />
                                                 </Link>
-                                                <Link to={`/delete/${book_id}`} className="w-1/3 p-2 rounded-lg text-white bg-pink-600"><MdDelete className='mx-auto text-lg h-100' />
+                                                <Link to={`/delete/${book_id}`} className="w-1/3 p-2 rounded-lg text-white bg-pink-600">
+                                                    <MdDelete className='mx-auto text-lg h-100' />
                                                 </Link>
                                             </div>
                                         </td>
@@ -107,7 +109,7 @@ const AllBooks = () => {
                                 );
                             })
                         ) : (
-                            <tr >
+                            <tr>
                                 <td colSpan={5} className="border py-2 px-8 border-slate-300 text-center text-xl text-red-600 text-600">No Book available</td>
                             </tr>
                         )}
