@@ -54,9 +54,14 @@ app.use("/", homeRoutes);
 // Single page Book
 app.use('/book', bookRoutes);
 
+// Edit book
+app.use("/author/all-books/edit-book", bookRoutes);
+
 app.get("/author", userAuthentication, (req, res) => {
     return res.json({ status: true, author_data: req.user });
 });
+
+
 
 // login
 app.get("/login", userAuthentication, (req, res) => {

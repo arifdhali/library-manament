@@ -1,4 +1,5 @@
 export { default as Author } from "./Author";
 export { default as AddBook } from "./Add_book";
-export { default as AllBooks } from "./AllBooks"
+export { default as AllBooks } from "./AllBooks";
+export { default as EditBook } from "./EditBook";
 export { default as AuthorModule } from "./Components/Author_module";
