@@ -30,7 +30,7 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:4000/login/', signin);
+      const response = await axios.post(`${process.env.API_BASE_URL}/login/`, signin);
       if (response.data.status) {
         successLogin(response.data.message)
         navigate("/author");
@@ -49,7 +49,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      let response = await axios.get("http://localhost:4000/login/");
+      let response = await axios.get(`${process.env.API_BASE_URL}/login/`);
       
       if (response.data.status) {
         navigate("/author");

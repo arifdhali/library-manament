@@ -54,7 +54,7 @@ app.use("/", homeRoutes);
 // Single page Book
 app.use('/book', bookRoutes);
 
-// Edit book
+// Updte book
 app.use("/author/all-books/edit-book", bookRoutes);
 
 app.get("/author", userAuthentication, (req, res) => {

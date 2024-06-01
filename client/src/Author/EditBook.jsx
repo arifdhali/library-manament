@@ -17,7 +17,7 @@ const Add_book = () => {
     const { id } = useParams();
     const getSelectedBooks = async (e) => {
         try {
-            const response = await axios.get(`http://localhost:4000/author/all-books/edit-book/${id}`);
+            const response = await axios.get(`${process.env.API_BASE_URL}/author/all-books/edit-book/${id}`);
             if (response.status === 200) {
                 if (response.data && response.data.length > 0) {
                     setBook(response.data[0]);
@@ -49,8 +49,9 @@ const Add_book = () => {
 
     return (
         <>
-            <Author_module />
+
             <Toaster />
+            <Author_module />
             <section className="add-book p-10">
                 <form onSubmit={handleAddbookSubmit} className='w-3/5 m-auto'>
                     <div className="space-y-12">
@@ -63,7 +64,7 @@ const Add_book = () => {
                                     <label htmlFor="title" className="block text-sm font-medium leading-6 text-gray-900">Title</label>
                                     <div className="mt-2">
                                         <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600">
-                                            <input  onChange={handleAddBook} value={title} type="text" name="title" id="title" autoComplete="title" className="block flex-1 border-0 bg-transparent py-1.5 px-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="Story of example" required />
+                                            <input onChange={handleAddBook} value={title} type="text" name="title" id="title" autoComplete="title" className="block flex-1 border-0 bg-transparent py-1.5 px-4 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6" placeholder="Story of example" required />
                                         </div>
                                     </div>
                                 </div>

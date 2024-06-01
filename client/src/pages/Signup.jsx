@@ -38,7 +38,7 @@ const Signup = () => {
   const handelSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:4000/signup', signup);
+      const response = await axios.post(`${process.env.API_BASE_URL}/signup`, signup);
       if (response.data.status) {
         redirect('/login');
       }

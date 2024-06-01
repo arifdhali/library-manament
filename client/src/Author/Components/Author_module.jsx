@@ -12,7 +12,7 @@ const Author_module = () => {
 
     const handleLogout = async () => {
         try {
-            let response = await axios.get('http://localhost:4000/logout');
+            let response = await axios.get(`${process.env.API_BASE_URL}/logout`);
             if (response.data.status) {
                 navigate('/');
             }

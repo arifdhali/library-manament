@@ -6,6 +6,6 @@ const singleBookController = require("../Controllers/singlePage.controller");
 router.get("/:id", singleBookController);
 
 // Edit page
-router.get("/edit-book/:id", singleBookController);
+router.get("/:id", singleBookController);
 
 module.exports = router;

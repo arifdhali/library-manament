@@ -15,7 +15,7 @@ const AuthorContextProvider = ({ children }) => {
     // Get author
     const getAuthor = async () => {
         try {
-            const response = await axios.get('http://localhost:4000/author/');
+            const response = await axios.get(`${process.env.API_BASE_URL}/author/`);
             if (response.data.status) {
                 setLogin(response.data.status);
                 const { author_id, name } = response.data.author_data;
@@ -31,7 +31,7 @@ const AuthorContextProvider = ({ children }) => {
     // Get all books
     const getAllBooks = async () => {
         try {
-            const response = await axios.get('http://localhost:4000/author/all-books');
+            const response = await axios.get(`${process.env.API_BASE_URL}/author/all-books`);
             let { status, all_books } = response.data;
             if (status) {
                 setBookCount(all_books.length);

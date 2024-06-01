@@ -14,7 +14,7 @@ const AllBooks = () => {
 
     const getAllBooks = async () => {
         try {
-            const response = await axios.get("http://localhost:4000/author/all-books");
+            const response = await axios.get(`${process.env.API_BASE_URL}/author/all-books`);
             if (response.status === 200) {
 
                 let books = response.data.all_books.map((book) => {
@@ -40,7 +40,7 @@ const AllBooks = () => {
     const handleStatus = async (e, book_id) => {
         const { value } = e.target;
         try {
-            const response = await axios.patch(`http://localhost:4000/author/all-books/${book_id}`, {
+            const response = await axios.patch(`${process.env.API_BASE_URL}/author/all-books/${book_id}`, {
                 status: value
             });
             if (response.status === 200) {

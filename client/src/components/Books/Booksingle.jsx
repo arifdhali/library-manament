@@ -3,13 +3,15 @@ import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 
 const BookSingle = () => {
+
+
+
   const [book, setBook] = useState({});
   const { id } = useParams();
 
   const fetchBookById = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/book/${id}`);
-      console.log(response)
+      const response = await axios.get(`${process.env.API_BASE_URL}/book/${id}`);      
       if (response.status === 200) {
         setBook(response.data[0]);
       } else {
@@ -29,7 +31,7 @@ const BookSingle = () => {
       {book && (
         <div className="max-w-4xl mx-auto bg-white p-8 rounded shadow">
           <img
-            src={`http://localhost:4000/books/${book.thumbnail}`}
+            src={`${process.env.API_BASE_URL}/books/${book.thumbnail}`}
             alt={book.title}
             className="mx-auto rounded-lg h-96"
           />
