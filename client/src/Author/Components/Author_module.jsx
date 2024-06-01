@@ -12,7 +12,7 @@ const Author_module = () => {
 
     const handleLogout = async () => {
         try {
-            let response = await axios.get(`${process.env.RECT_API_BASE_URL}/logout`);
+            let response = await axios.get(`${process.env.REACT_API_BASE_URL}/logout`);
             if (response.data.status) {
                 navigate('/');
             }
@@ -27,7 +27,7 @@ const Author_module = () => {
                 <ul className="space-y-2 font-medium">
                     <li className='text-center mb-6 text-white'>
                         <Link to="/author" className="mt-0 p-2 text-gray rounded-lg group">
-                            <img src={`${process.env.RECT_API_BASE_URL}/author/${user_image}`} className='w-2/5 mb-3 mx-auto rounded-full shadow-xl' alt={name} />
+                            <img src={`${process.env.REACT_API_BASE_URL}/author/${user_image}`} className='w-2/5 mb-3 mx-auto rounded-full shadow-xl' alt={name} />
                             <strong>{name}</strong>
                         </Link>
                     </li>

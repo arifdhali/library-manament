@@ -10,7 +10,7 @@ const Home = () => {
   axios.defaults.withCredentials = true;
   const getAllBooks = async () => {
     try {
-      const response = await axios.get(`${process.env.RECT_API_BASE_URL}/`);
+      const response = await axios.get(`${process.env.REACT_API_BASE_URL}/`);
       if (response.status === 200) {
         setBooks(response.data);
       } else {

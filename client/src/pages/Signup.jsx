@@ -57,7 +57,7 @@ const Signup = () => {
 
     console.log(formData);
     try {
-      const response = await axios.post(`${process.env.RECT_API_BASE_URL}/signup`, formData);
+      const response = await axios.post(`${process.env.REACT_API_BASE_URL}/signup`, formData);
       if (response.data.status) {
         redirect('/login');
       }

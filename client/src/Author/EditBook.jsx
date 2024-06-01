@@ -27,7 +27,7 @@ const Add_book = () => {
 
     const getSelectedBooks = async () => {
         try {
-            const response = await axios.get(`${process.env.RECT_API_BASE_URL}/author/all-books/edit-book/${id}`);
+            const response = await axios.get(`${process.env.REACT_API_BASE_URL}/author/all-books/edit-book/${id}`);
             if (response.status === 200) {
                 if (response.data && response.data.length > 0) {
                     setBook(response.data[0]);
@@ -152,7 +152,7 @@ const Add_book = () => {
 
                                         <div className="after-upload">
                                             <div>
-                                                < img src={`${process.env.RECT_API_BASE_URL}/books/${thumbnail}`} alt="Uploaded Thumbnail" className="object-cover  w-2/5 mx-auto rounded-lg max-h-64" />
+                                                < img src={`${process.env.REACT_API_BASE_URL}/books/${thumbnail}`} alt="Uploaded Thumbnail" className="object-cover  w-2/5 mx-auto rounded-lg max-h-64" />
                                             </div>
 
                                             <div className="mt-4 text-sm leading-6 text-gray-600 text-center">

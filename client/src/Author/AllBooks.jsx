@@ -9,13 +9,15 @@ import { Link } from 'react-router-dom';
 const AllBooks = () => {
     const [allBooks, setAllBooks] = useState([]);
     const [removeBook, setRemoveBook] = useState(false);
+    const [modal, setModal] = useState(false);
+    const [selectBook, setSelectBook] = useState();
 
     const successLogin = (message) => toast.success(message);
     const errorLogin = (message) => toast.error(message);
 
     const getAllBooks = async () => {
         try {
-            const response = await axios.get(`${process.env.RECT_API_BASE_URL}/author/all-books`);
+            const response = await axios.get(`${process.env.REACT_API_BASE_URL}/author/all-books`);
             if (response.status === 200) {
 
                 let books = response.data.all_books.map((book) => {
@@ -38,7 +40,7 @@ const AllBooks = () => {
     const handleStatus = async (e, book_id) => {
         const { value } = e.target;
         try {
-            const response = await axios.patch(`${process.env.RECT_API_BASE_URL}/author/all-books/${book_id}`, {
+            const response = await axios.patch(`${process.env.REACT_API_BASE_URL}/author/all-books/${book_id}`, {
                 status: value
             });
             if (response.status === 200) {
@@ -61,8 +63,36 @@ const AllBooks = () => {
 
     // HANDLE DELETE BUTTONS
     const handeliDeleteButton = (itemId) => {
-        console.log(itemId);
+        setModal(true);
+        setSelectBook(itemId);
+    }
 
+    // HANDEL DELETE
+    const handleDelete = async () => {
+        setRemoveBook(true);
+        if (removeBook) {
+            let response = await axios.delete(`${process.env.REACT_API_BASE_URL}/author/all-books/delete-book/${selectBook}`)
+            if (response.data.status) {
+                successLogin(response.data.message);
+                setAllBooks((allBooks) => {
+                    return allBooks.filter((book) => {
+                        return book.book_id !== selectBook
+                    })
+                });
+                setModal(false);
+            } else {
+                errorLogin(response.data.message);
+            }
+
+        }
+
+
+
+    }
+
+    // HANDLE CLOSE BUTTON
+    const handleClose = () => {
+        setModal(false);
     }
 
     useEffect(() => {
@@ -77,7 +107,7 @@ const AllBooks = () => {
                 <table className="text-left border-collapse border border-slate-400">
                     <thead>
                         <tr>
-                            <th className="w-2/9 py-2 px-8 border border-slate-300">ID</th>
+                            <th className="text-center w-2/9 py-2 px-8 border border-slate-300">ID</th>
                             <th className="w-2/6 py-2 px-8 border border-slate-300">Title</th>
                             <th className="w-1/5 py-2 px-8 border border-slate-300">Publish Date</th>
                             <th className="w-1/10 py-2 px-8 border border-slate-300">Price</th>
@@ -92,7 +122,7 @@ const AllBooks = () => {
                                 const { book_id, title, publication, price, status } = book;
                                 return (
                                     <tr key={book_id}>
-                                        <td className="border py-2 px-8 border-slate-300">{book_id}</td>
+                                        <td className="text-center border py-2 px-8 border-slate-300">{book_id}</td>
                                         <td className="border py-2 px-8 border-slate-300">{title}</td>
                                         <td className="border py-2 px-8 border-slate-300">{publication}</td>
                                         <td className="border py-2 px-8 border-slate-300"><span>₹</span> {price}</td>
@@ -128,15 +158,25 @@ const AllBooks = () => {
                         )}
                     </tbody>
                 </table>
+                {
+                    modal && (
 
 
-                {/* <div className='w-2/4 bg-slate-600 rounded-xl'>
-                    <h4>Book title</h4>
-                    <p>Sure want to delete ?</p>
 
-                    <button>Confirm</button>
-                    <button>Cancel</button>
-                </div> */}
+                        <div className="visible fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+                            <div className="bg-white rounded-lg p-8 shadow-lg w-1/4">
+
+                                <h2 className="text-xl font-semibold">Delete Confirmation</h2>
+                                <h3 className='text-lg'>Book name: </h3>
+                                <p className="mt-4">Are you sure you want to delete <span className="font-bold"></span>?</p>
+                                <div className="mt-6 flex justify-end space-x-4">
+                                    <button onClick={handleClose} className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Cancel</button>
+                                    <button onClick={handleDelete} className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
             </section>
         </>
     );

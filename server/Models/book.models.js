@@ -26,6 +26,20 @@ const Book = {
             }
         })
 
+    }),
+
+    deleteBooks: ((bookID, res) => {
+        let removeSql = 'DELETE FROM books_list WHERE book_id = ?';
+        connection.query(removeSql, [bookID], (err, result) => {
+            if (err) {
+                return res(err, null);
+            }
+            return res(null, result);
+
+        })
+
+
+
     })
 
 

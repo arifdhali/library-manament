@@ -13,7 +13,7 @@ const Book = (props) => {
 
   return (
     <div className="book-item shadow-lg p-5 rounded ">
-      <img className="mx-auto rounded" src={`${process.env.RECT_API_BASE_URL}/books/${thumbnail}`} alt={title} />
+      <img className="mx-auto rounded" src={`${process.env.REACT_API_BASE_URL}/books/${thumbnail}`} alt={title} />
       <div className="book-desc">
         <div className=" mt-3">
           <h4 className="text-lg font-semibold">

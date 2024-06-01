@@ -2,7 +2,6 @@ const { getSingleBooks } = require('../Models/book.models');
 
 const singleBook = (req, res) => {
     const bookID = req.params.id;
-    console.log(`Book ID: ${bookID}`);
     getSingleBooks(bookID, (err, result) => {
         if (err) {
             console.error("Error executing query:", err);

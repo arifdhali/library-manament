@@ -19,7 +19,7 @@ app.use(cookieParser());
 app.use(
     cors({
         origin: "http://localhost:5173",
-        methods: "GET,POST,PATCH,PUT",
+        methods: "GET,POST,PATCH,PUT,DELETE",
         credentials: true,
     })
 );
@@ -54,6 +54,9 @@ app.use("/", homeRoutes);
 app.use("/book", bookRoutes);
 
 // Updte book
+app.use("/author/all-books", bookRoutes);
+
+// Delete book
 app.use("/author/all-books", bookRoutes);
 
 

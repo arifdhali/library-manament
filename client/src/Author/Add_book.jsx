@@ -47,7 +47,7 @@ const Add_book = () => {
             formData.append(key, addBook[key]);
         }
         try {
-            const response = await axios.post(`${process.env.RECT_API_BASE_URL}/author/add-books/`, formData, {
+            const response = await axios.post(`${process.env.REACT_API_BASE_URL}/author/add-books/`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
