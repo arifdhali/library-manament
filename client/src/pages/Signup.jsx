@@ -14,16 +14,28 @@ const Signup = () => {
     phonenumber: "",
     gender: "",
     country: "",
-    password: ""
+    password: "",
+    profile: "",
+    previewProfile: ""
+
 
   })
   const handelInput = (e) => {
-    const { name, value } = e.target;
-    setSignup({
-      ...signup,
-      [name]: value
-    });
+    const { name, value, files } = e.target;
 
+    if (name === 'profile') {
+      setSignup({
+        ...signup,
+        [name]: files[0],
+        previewProfile: URL.createObjectURL(files[0])
+      })
+    } else {
+      setSignup({
+        ...signup,
+        [name]: value
+      });
+
+    }
     let errorObj = { ...errors };
     if (!value.trim()) {
       let firstLetter = name.charAt(0).toUpperCase() + name.slice(1);
@@ -37,8 +49,15 @@ const Signup = () => {
 
   const handelSubmit = async (e) => {
     e.preventDefault();
+
+    let formData = new FormData();
+    for (let i in signup) {
+      formData.append(i, signup[i])
+    }
+
+    console.log(formData);
     try {
-      const response = await axios.post(`${process.env.API_BASE_URL}/signup`, signup);
+      const response = await axios.post(`${process.env.RECT_API_BASE_URL}/signup`, formData);
       if (response.data.status) {
         redirect('/login');
       }
@@ -234,6 +253,52 @@ const Signup = () => {
                     className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required=""
                   />
+                </div>
+                <div className="mt-2 ">
+                  <label
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  >
+                    Upload Profile
+                  </label>
+
+
+                  {!signup.profile ? (
+                    <div className="flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+
+                      <>
+                        <div className="text-center">
+                          <svg className="mx-auto h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path fillRule="evenodd" d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z" clipRule="evenodd" />
+                          </svg>
+                          <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                            <label htmlFor="profile" className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                              <span>Upload a file</span>
+                              <input onChange={handelInput} id="profile" name="profile" type="file" className="sr-only" />
+                            </label>
+                            <p className="pl-1">or drag and drop</p>
+                          </div>
+                          <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+                        </div></>
+
+                    </div>
+                  ) : (
+                    <>
+                      <div className="after-upload">
+                        <div>
+                          <img src={signup.previewProfile} alt="Uploaded profile" className=" rounded-xl mx-auto w-2/2 max-h-20" />
+                        </div>
+
+                        <div className="mt-4 text-sm leading-6 text-gray-600 text-center">
+                          <label htmlFor="profile" className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                            <span>Re-Upload photo</span>
+                            <input onChange={handelInput} id="profile" name="profile" type="file" className="sr-only" />
+                          </label>
+                        </div>
+                      </div>
+                    </>
+                  )
+                  }
+
                 </div>
                 <button
                   type="submit"

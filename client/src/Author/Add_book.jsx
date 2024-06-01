@@ -13,7 +13,8 @@ const Add_book = () => {
         impact: "",
         legacy: "",
         thumbnail: "",
-        price: ""
+        price: "",
+        previewProfile: ""
     });
 
     // Success and error toasts
@@ -26,7 +27,8 @@ const Add_book = () => {
         if (name === "thumbnail") {
             setAddBook({
                 ...addBook,
-                [name]: files[0]
+                [name]: files[0],
+                previewProfile: URL.createObjectURL(files[0])
             });
         } else {
             setAddBook({
@@ -45,7 +47,7 @@ const Add_book = () => {
             formData.append(key, addBook[key]);
         }
         try {
-            const response = await axios.post(`${process.env.API_BASE_URL}/author/add-books/`, formData, {
+            const response = await axios.post(`${process.env.RECT_API_BASE_URL}/author/add-books/`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -62,7 +64,8 @@ const Add_book = () => {
                     impact: "",
                     legacy: "",
                     thumbnail: "",
-                    price: ""
+                    price: "",
+                    previewProfile: ""
                 });
             } else {
                 errorLogin(response.data.message);
@@ -72,16 +75,8 @@ const Add_book = () => {
         }
     };
 
-    // Destructering the obj from addBook
-    const { title,
-        authors,
-        publication,
-        plot,
-        themes,
-        impact,
-        legacy,
-        thumbnail,
-        price } = addBook;
+    // Destructuring the obj from addBook
+    const { title, authors, publication, plot, themes, impact, legacy, thumbnail, previewProfile, price } = addBook;
 
     return (
         <>
@@ -125,7 +120,7 @@ const Add_book = () => {
                                 <div className="col-span-full">
                                     <label htmlFor="plot" className="block text-sm font-medium leading-6 text-gray-900">Plot</label>
                                     <div className="mt-2">
-                                        <textarea value={plot} onChange={handleAddBook} id="plot" name="plot" rows="3" className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required></textarea>
+                                        <textarea value={plot} onChange={handleAddBook} id="plot" name="plot" rows="3" className="px-4 block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" required></textarea>
                                     </div>
                                 </div>
 
@@ -158,32 +153,36 @@ const Add_book = () => {
 
                                 <div className="col-span-full">
                                     <label htmlFor="thumbnail" className="block text-sm font-medium leading-6 text-gray-900">Book photo</label>
-                                    <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                                        {!thumbnail ? (
-
-                                            <>
-                                                <div className="text-center">
-                                                    <svg className="mx-auto h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                                        <path fillRule="evenodd" d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z" clipRule="evenodd" />
-                                                    </svg>
-                                                    <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                                                        <label htmlFor="thumbnail" className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                                                            <span>Upload a file</span>
-                                                            <input onChange={handleAddBook} id="thumbnail" name="thumbnail" type="file" className="sr-only" />
-                                                        </label>
-                                                        <p className="pl-1">or drag and drop</p>
-                                                    </div>
-                                                    <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
-                                                </div></>
-                                        ) : (
-                                            < img src={URL.createObjectURL(thumbnail)} alt="Uploaded Thumbnail" className="w-full max-h-64" />
-                                        )
-                                        }
-
-
-                                    </div>
+                                    {!thumbnail ? (
+                                        <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
+                                            <div className="text-center">
+                                                <svg className="mx-auto h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                                    <path fillRule="evenodd" d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z" clipRule="evenodd" />
+                                                </svg>
+                                                <div className="mt-4 flex text-sm leading-6 text-gray-600">
+                                                    <label htmlFor="thumbnail" className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                                                        <span>Upload a file</span>
+                                                        <input onChange={handleAddBook} id="thumbnail" name="thumbnail" type="file" className="sr-only" />
+                                                    </label>
+                                                    <p className="pl-1">or drag and drop</p>
+                                                </div>
+                                                <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="after-upload">
+                                            <div>
+                                                <img src={previewProfile} alt="Uploaded Thumbnail" className="w-2/5 object-cover mx-auto rounded-lg max-h-64" />
+                                            </div>
+                                            <div className="mt-4 text-sm leading-6 text-gray-600 text-center">
+                                                <label htmlFor="thumbnail" className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                                                    <span>Re-Upload photo</span>
+                                                    <input onChange={handleAddBook} id="thumbnail" name="thumbnail" type="file" className="sr-only" />
+                                                </label>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
-
 
                                 <div className="col-span-full">
                                     <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">Price</label>

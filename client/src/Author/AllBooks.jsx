@@ -8,13 +8,14 @@ import { Link } from 'react-router-dom';
 
 const AllBooks = () => {
     const [allBooks, setAllBooks] = useState([]);
+    const [removeBook, setRemoveBook] = useState(false);
 
     const successLogin = (message) => toast.success(message);
     const errorLogin = (message) => toast.error(message);
 
     const getAllBooks = async () => {
         try {
-            const response = await axios.get(`${process.env.API_BASE_URL}/author/all-books`);
+            const response = await axios.get(`${process.env.RECT_API_BASE_URL}/author/all-books`);
             if (response.status === 200) {
 
                 let books = response.data.all_books.map((book) => {
@@ -23,10 +24,7 @@ const AllBooks = () => {
                         status: book.status.toString()
                     }
                 })
-
                 setAllBooks(books)
-
-                console.log(books)
             } else {
                 console.error("Error fetching data: ", response.statusText);
             }
@@ -40,7 +38,7 @@ const AllBooks = () => {
     const handleStatus = async (e, book_id) => {
         const { value } = e.target;
         try {
-            const response = await axios.patch(`${process.env.API_BASE_URL}/author/all-books/${book_id}`, {
+            const response = await axios.patch(`${process.env.RECT_API_BASE_URL}/author/all-books/${book_id}`, {
                 status: value
             });
             if (response.status === 200) {
@@ -60,6 +58,12 @@ const AllBooks = () => {
             errorLogin(error.response?.data?.message || 'Something went wrong');
         }
     };
+
+    // HANDLE DELETE BUTTONS
+    const handeliDeleteButton = (itemId) => {
+        console.log(itemId);
+
+    }
 
     useEffect(() => {
         getAllBooks();
@@ -109,7 +113,7 @@ const AllBooks = () => {
                                                 <Link to={`edit-book/${book_id}`} className="text w-1/3 p-2 rounded-lg text-white bg-sky-600 ">
                                                     <FaRegEdit className='mx-auto text-lg h-100' />
                                                 </Link>
-                                                <Link to={`delete/${book_id}`} className="w-1/3 p-2 rounded-lg text-white bg-pink-600">
+                                                <Link onClick={() => handeliDeleteButton(book_id)} className="w-1/3 p-2 rounded-lg text-white bg-pink-600">
                                                     <MdDelete className='mx-auto text-lg h-100' />
                                                 </Link>
                                             </div>
@@ -124,6 +128,15 @@ const AllBooks = () => {
                         )}
                     </tbody>
                 </table>
+
+
+                {/* <div className='w-2/4 bg-slate-600 rounded-xl'>
+                    <h4>Book title</h4>
+                    <p>Sure want to delete ?</p>
+
+                    <button>Confirm</button>
+                    <button>Cancel</button>
+                </div> */}
             </section>
         </>
     );

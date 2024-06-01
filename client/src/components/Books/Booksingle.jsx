@@ -11,7 +11,7 @@ const BookSingle = () => {
 
   const fetchBookById = async () => {
     try {
-      const response = await axios.get(`${process.env.API_BASE_URL}/book/${id}`);      
+      const response = await axios.get(`${process.env.RECT_API_BASE_URL}/book/${id}`);      
       if (response.status === 200) {
         setBook(response.data[0]);
       } else {
@@ -31,7 +31,7 @@ const BookSingle = () => {
       {book && (
         <div className="max-w-4xl mx-auto bg-white p-8 rounded shadow">
           <img
-            src={`${process.env.API_BASE_URL}/books/${book.thumbnail}`}
+            src={`${process.env.RECT_API_BASE_URL}/books/${book.thumbnail}`}
             alt={book.title}
             className="mx-auto rounded-lg h-96"
           />

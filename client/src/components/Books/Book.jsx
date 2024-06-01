@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import textLength from "../../utils/textlength";
 
 const Book = (props) => {
   const { book_id, title, authors, publication, price, thumbnail } = props.book;
@@ -9,22 +10,31 @@ const Book = (props) => {
   };
 
 
+
   return (
     <div className="book-item shadow-lg p-5 rounded ">
-      <img className="mx-auto rounded" src={`${process.env.API_BASE_URL}/books/${thumbnail}`} alt={title} />
+      <img className="mx-auto rounded" src={`${process.env.RECT_API_BASE_URL}/books/${thumbnail}`} alt={title} />
       <div className="book-desc">
         <div className=" mt-3">
           <h4 className="text-lg font-semibold">
-            Name: <span className="font-normal">{title}</span>{" "}
+            Name: <span className="font-normal">
+              {
+                // Title length
+                textLength(title, 20)
+              }
+            </span>
           </h4>
           <h4 className="text-lg font-semibold">
-            Author: <span className="font-normal">{authors}</span>{" "}
+            Author: <span className="font-normal">{
+              // Title length
+              textLength(authors, 18)
+            }</span>{" "}
           </h4>
           <h4 className="text-lg font-semibold">
             Publish: <span className="font-normal"> {publication} </span>{" "}
           </h4>
           <h4 className="text-lg font-semibold">
-            Price:<span className="font-normal">${price}</span>
+            Price:<span className="font-normal"> ₹{price}</span>
           </h4>
         </div>
 

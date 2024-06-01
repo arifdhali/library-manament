@@ -47,21 +47,20 @@ const userAuthentication = (req, res, next) => {
     }
 };
 
-
 // Home routes
 app.use("/", homeRoutes);
 
 // Single page Book
-app.use('/book', bookRoutes);
+app.use("/book", bookRoutes);
 
 // Updte book
-app.use("/author/all-books/edit-book", bookRoutes);
+app.use("/author/all-books", bookRoutes);
+
+
 
 app.get("/author", userAuthentication, (req, res) => {
     return res.json({ status: true, author_data: req.user });
 });
-
-
 
 // login
 app.get("/login", userAuthentication, (req, res) => {
@@ -105,45 +104,53 @@ app.post("/login", (req, res) => {
     });
 });
 
+// ADD BOOK
+let uploadProfile = uploadMulter("author"); // Multer upload folder name
+
 // sign up
-app.post("/signup", (req, res) => {
-    const { name, email, address, age, phone, gender, country, password } =
-        req.body;
+app.post("/signup", uploadProfile.single('profile'), (req, res) => {
+    console.log(req.file);
+    if (!req.file) {
+        return res.status(400).json({ status: false, message: "No file uploaded" });
+    }
+    const { filename: user_image } = req.file; 
+
+    const { name, email, address, age, phone, gender, country, password } = req.body;
 
     // Hash the password
-    let checkEmail = "SELECT * FROM users WHERE email = ?";
-    connection.query(checkEmail, [email], (err, result) => {
+    bcrypt.hash(password, 10, (err, hash) => {
         if (err) {
-            return res.json({ status: false, message: "Error checking email" });
+            return res.status(500).json({
+                status: false,
+                message: "Error generating or encrypting password",
+            });
         }
 
-        if (result.length > 0) {
-            return res.json({ status: false, message: "Email already exists" });
-        }
-
-        let saltRounds = 10;
-        bcrypt.hash(password, saltRounds, (err, hash) => {
+        // Check if email already exists
+        const checkEmail = "SELECT * FROM users WHERE email = ?";
+        connection.query(checkEmail, [email], (err, result) => {
             if (err) {
-                return res.json({
-                    status: false,
-                    message: "Error generating or decrypt password",
-                });
+                return res.status(500).json({ status: false, message: "Error checking email" });
             }
 
-            let insertUser =
-                "INSERT INTO users (author_id,name, email, address, age, phone_number, gender, country, password) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?)";
+            if (result.length > 0) {
+                return res.status(400).json({ status: false, message: "Email already exists" });
+            }
+
+            // Insert new user into the database
+            const insertUser =
+                "INSERT INTO users (author_id, user_image, name, email, address, age, phone_number, gender, country, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             connection.query(
                 insertUser,
-                [uuidv4(), name, email, address, age, phone, gender, country, hash],
+                [uuidv4(), user_image, name, email, address, age, phone, gender, country, hash],
                 (err, result) => {
                     if (err) {
-                        return res.json({ status: false, message: err.message });
-                    } else {
-                        return res.json({
-                            status: true,
-                            message: "Successfully create your account",
-                        });
+                        return res.status(500).json({ status: false, message: err.message });
                     }
+                    return res.status(200).json({
+                        status: true,
+                        message: "Successfully created your account",
+                    });
                 }
             );
         });

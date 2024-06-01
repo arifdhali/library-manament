@@ -7,6 +7,7 @@ const multerStorgeHandle = (folderName) => {
             return cb(null, path.join(__dirname, `../public/uploads/${folderName}`));
         },
         filename: (req, file, cb) => {
+            console.log(file.fieldname);
             return cb(
                 null,
                 `${file.fieldname}-${file.originalname}`

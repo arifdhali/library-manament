@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Book from "../components/Books/Book";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import textLength from "../utils/textlength";
 
 const Home = () => {
   const redirect = useNavigate();
@@ -9,7 +10,7 @@ const Home = () => {
   axios.defaults.withCredentials = true;
   const getAllBooks = async () => {
     try {
-      const response = await axios.get(`${process.env.API_BASE_URL}/`);
+      const response = await axios.get(`${process.env.RECT_API_BASE_URL}/`);
       if (response.status === 200) {
         setBooks(response.data);
       } else {
@@ -22,6 +23,7 @@ const Home = () => {
 
   useEffect(() => {
     getAllBooks();
+    textLength('arif dhali',20);
   }, []);
 
   return (

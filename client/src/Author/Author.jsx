@@ -4,7 +4,9 @@ import Author_module from './Components/Author_module';
 import { useAuthorContext } from '../context/AuthorContext/AuthorContext';
 
 const Author = () => {
-    const { login } = useAuthorContext();
+    const { login, bookCount } = useAuthorContext();
+
+    console.log();
 
     return (
         <>
@@ -22,7 +24,7 @@ const Author = () => {
                             <div className="grid grid-cols-3 gap-4 mb-4">
                                 <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
                                     <Link to={"all-books/"} className="text-2xl text-gray-400 dark:text-gray-500">
-                                        All Books
+                                        All Books <span className='text-red-600'>No: {bookCount}</span>
                                     </Link>
                                 </div>
                                 <div className="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">

@@ -5,14 +5,14 @@ import axios from 'axios';
 import { useAuthorContext } from '../../context/AuthorContext/AuthorContext';
 
 const Author_module = () => {
-    const { userinfo,bookCount } = useAuthorContext();
-    const { name } = userinfo;
+    const { userinfo, bookCount } = useAuthorContext();
+    const { name, user_image } = userinfo;
     const navigate = useNavigate();
     axios.defaults.withCredentials = true;
 
     const handleLogout = async () => {
         try {
-            let response = await axios.get(`${process.env.API_BASE_URL}/logout`);
+            let response = await axios.get(`${process.env.RECT_API_BASE_URL}/logout`);
             if (response.data.status) {
                 navigate('/');
             }
@@ -27,7 +27,7 @@ const Author_module = () => {
                 <ul className="space-y-2 font-medium">
                     <li className='text-center mb-6 text-white'>
                         <Link to="/author" className="mt-0 p-2 text-gray rounded-lg group">
-                            <img src={Logo} className='w-2/5 mb-3 mx-auto rounded-full shadow-xl' alt="Logo" />
+                            <img src={`${process.env.RECT_API_BASE_URL}/author/${user_image}`} className='w-2/5 mb-3 mx-auto rounded-full shadow-xl' alt={name} />
                             <strong>{name}</strong>
                         </Link>
                     </li>
