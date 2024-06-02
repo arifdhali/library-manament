@@ -4,12 +4,11 @@ import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-const Add_book = () => {
-    // Success and error toasts
-    const successLogin = (message) => toast.success(message);
-    const errorLogin = (message) => toast.error(message);
+const EditBook = () => {
+    const successToast = (message) => toast.success(message);
+    const errorToast = (message) => toast.error(message);
 
-    // single book
+
     const [book, setBook] = useState({
         title: '',
         authors: '',
@@ -30,7 +29,8 @@ const Add_book = () => {
             const response = await axios.get(`${process.env.REACT_API_BASE_URL}/author/all-books/edit-book/${id}`);
             if (response.status === 200) {
                 if (response.data && response.data.length > 0) {
-                    setBook(response.data[0]);
+                    const bookData = response.data[0];
+                    setBook(bookData);
                 } else {
                     console.log("No book found or empty response.");
                 }
@@ -41,21 +41,52 @@ const Add_book = () => {
     };
 
     const handleInputChange = (e) => {
-
+        const { name, value } = e.target;
+        setBook((prevEdit) => ({
+            ...prevEdit,
+            [name]: value,
+        }));
     };
-
-
-
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setBook((prevEdit) => ({
+            ...prevEdit,
+            thumbnail: file,
+            previewProfile: URL.createObjectURL(file)
+        }));
+    };
     const handleAddbookSubmit = async (e) => {
         e.preventDefault();
-        // Submit form logic here
+
+        const formData = new FormData();
+        for (const key in book) {
+            formData.append(key, book[key]);
+        }
+
+        try {
+            const response = await axios.put(`${process.env.REACT_API_BASE_URL}/author/all-books/edit-book/${id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
+
+            if (response.status === 200) {
+                successToast("Book updated successfully!");
+            } else {
+                errorToast("Failed to update book.");
+            }
+        } catch (error) {
+            errorToast("Error updating book: " + error.message);
+        }
     };
 
     useEffect(() => {
         getSelectedBooks();
     }, []);
 
+
     const { title, authors, publication, plot, themes, impact, legacy, price, thumbnail, previewProfile } = book;
+    console.log(previewProfile)
 
     return (
         <>
@@ -133,39 +164,30 @@ const Add_book = () => {
                                 <div className="col-span-full">
                                     <label htmlFor="thumbnail" className="block text-sm font-medium leading-6 text-gray-900">Book photo</label>
                                     {!thumbnail ? (
-                                        <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                                            <div className="text-center">
-                                                <svg className="mx-auto h-12 w-12 text-gray-300" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                                    <path fillRule="evenodd" d="M1.5 6a2.25 2.25 0 012.25-2.25h16.5A2.25 2.25 0 0122.5 6v12a2.25 2.25 0 01-2.25 2.25H3.75A2.25 2.25 0 011.5 18V6zM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0021 18v-1.94l-2.69-2.689a1.5 1.5 0 00-2.12 0l-.88.879.97.97a.75.75 0 11-1.06 1.06l-5.16-5.159a1.5 1.5 0 00-2.12 0L3 16.061zm10.125-7.81a1.125 1.125 0 112.25 0 1.125 1.125 0 01-2.25 0z" clipRule="evenodd" />
-                                                </svg>
-                                                <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                                                    <label htmlFor="thumbnail" className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
-                                                        <span>Upload a file</span>
-                                                        <input id="thumbnail" name="thumbnail" type="file" className="sr-only" />
-                                                    </label>
-                                                    <p className="pl-1">or drag and drop</p>
-                                                </div>
-                                                <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
-                                            </div>
-                                        </div>
-                                    ) : (
-
-                                        <div className="after-upload">
+                                        <div className="before-upload">
                                             <div>
-                                                < img src={`${process.env.REACT_API_BASE_URL}/books/${thumbnail}`} alt="Uploaded Thumbnail" className="object-cover  w-2/5 mx-auto rounded-lg max-h-64" />
+                                                <img src={previewProfile} alt="Uploaded Thumbnail" className="object-cover w-2/5 mx-auto rounded-lg max-h-64" />
                                             </div>
-
                                             <div className="mt-4 text-sm leading-6 text-gray-600 text-center">
-                                                <label htmlFor="profile" className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                                                <label htmlFor="thumbnail" className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
                                                     <span>Re-Upload photo</span>
-                                                    <input id="profile" name="profile" type="file" className="sr-only" />
+                                                    <input id="thumbnail" name="thumbnail" type="file" className="sr-only" onChange={handleFileChange} />
                                                 </label>
                                             </div>
                                         </div>
-
-                                    )
-                                    }
-
+                                    ) : (
+                                        <div className="after-upload">
+                                            <div>
+                                                <img src={`${process.env.REACT_API_BASE_URL}/books/${thumbnail}`} alt="Uploaded Thumbnail" className="object-cover w-2/5 mx-auto rounded-lg max-h-64" />
+                                            </div>
+                                            <div className="mt-4 text-sm leading-6 text-gray-600 text-center">
+                                                <label htmlFor="thumbnail" className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
+                                                    <span>Re-Upload photo</span>
+                                                    <input id="thumbnail" name="thumbnail" type="file" className="sr-only" onChange={handleFileChange} />
+                                                </label>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="col-span-full">
                                     <label htmlFor="price" className="block text-sm font-medium leading-6 text-gray-900">Price</label>
@@ -182,9 +204,9 @@ const Add_book = () => {
                         <button type="submit" className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Submit</button>
                     </div>
                 </form>
-            </section >
+            </section>
         </>
     );
 };
 
-export default Add_book;
+export default EditBook;
