@@ -27,7 +27,30 @@ const Book = {
         })
 
     }),
+    updateBooks: ((ID, data, callback) => {
+        const fields = [];
+        const values = [];
 
+        // Dynamically construct the SET clause of the SQL query
+        for (const [key, value] of Object.entries(data)) {
+            fields.push(`${key} = ?`);
+            values.push(value);
+        }
+
+        // Join fields with commas for the SQL SET clause
+        const updateSql = `UPDATE books_list SET ${fields.join(', ')} WHERE book_id = ?`;
+
+        console.log(values); // Debugging
+
+        // Execute the query
+        connection.query(updateSql, [...values, ID], (err, result) => {
+            if (err) {
+                return callback(err, null);
+            } else {
+                return callback(null, result);
+            }
+        });
+    }),
     deleteBooks: ((bookID, res) => {
         let removeSql = 'DELETE FROM books_list WHERE book_id = ?';
         connection.query(removeSql, [bookID], (err, result) => {

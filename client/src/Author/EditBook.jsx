@@ -63,6 +63,8 @@ const EditBook = () => {
             formData.append(key, book[key]);
         }
 
+        console.log(formData)
+
         try {
             const response = await axios.put(`${process.env.REACT_API_BASE_URL}/author/all-books/edit-book/${id}`, formData, {
                 headers: {
@@ -86,7 +88,6 @@ const EditBook = () => {
 
 
     const { title, authors, publication, plot, themes, impact, legacy, price, thumbnail, previewProfile } = book;
-    console.log(previewProfile)
 
     return (
         <>
@@ -163,10 +164,10 @@ const EditBook = () => {
 
                                 <div className="col-span-full">
                                     <label htmlFor="thumbnail" className="block text-sm font-medium leading-6 text-gray-900">Book photo</label>
-                                    {!thumbnail ? (
+                                    {!previewProfile ? (
                                         <div className="before-upload">
                                             <div>
-                                                <img src={previewProfile} alt="Uploaded Thumbnail" className="object-cover w-2/5 mx-auto rounded-lg max-h-64" />
+                                                <img src={`${process.env.REACT_API_BASE_URL}/books/${thumbnail}`} alt="Uploaded Thumbnail" className="object-cover w-2/5 mx-auto rounded-lg max-h-64" />
                                             </div>
                                             <div className="mt-4 text-sm leading-6 text-gray-600 text-center">
                                                 <label htmlFor="thumbnail" className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">
@@ -178,7 +179,7 @@ const EditBook = () => {
                                     ) : (
                                         <div className="after-upload">
                                             <div>
-                                                <img src={`${process.env.REACT_API_BASE_URL}/books/${thumbnail}`} alt="Uploaded Thumbnail" className="object-cover w-2/5 mx-auto rounded-lg max-h-64" />
+                                                <img src={previewProfile} alt="Uploaded Thumbnail" className="object-cover w-2/5 mx-auto rounded-lg max-h-64" />
                                             </div>
                                             <div className="mt-4 text-sm leading-6 text-gray-600 text-center">
                                                 <label htmlFor="thumbnail" className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500">

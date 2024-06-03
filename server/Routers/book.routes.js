@@ -18,8 +18,6 @@ router.get("/edit-book/:id", singleBookController);
 // UPDATE THE EDIT PAGE DATA
 router.put('/edit-book/:id', updateController);
 
-
-
 // DELETE SELECTED BOOK
 router.delete("/delete-book/:id", deleteBookController);
 

@@ -54,7 +54,9 @@ app.use("/", homeRoutes);
 app.use("/book", bookRoutes);
 
 // Updte book
-app.use("/author/all-books", bookRoutes);
+let updateBoook = uploadMulter("books");
+app.use("/author/all-books", updateBoook.single('thumbnail'), bookRoutes);
+
 
 // Delete book
 app.use("/author/all-books", bookRoutes);
@@ -116,7 +118,7 @@ app.post("/signup", uploadProfile.single('profile'), (req, res) => {
     if (!req.file) {
         return res.status(400).json({ status: false, message: "No file uploaded" });
     }
-    const { filename: user_image } = req.file; 
+    const { filename: user_image } = req.file;
 
     const { name, email, address, age, phone, gender, country, password } = req.body;
 
