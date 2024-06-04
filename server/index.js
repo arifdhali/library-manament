@@ -10,6 +10,7 @@ const path = require("path");
 
 const homeRoutes = require("./Routers/home.routes");
 const bookRoutes = require("./Routers/book.routes");
+const loginRoutes = require("./Routers/login.routes");
 
 const uploadMulter = require("./Utils/multerConfig");
 
@@ -68,9 +69,7 @@ app.get("/author", userAuthentication, (req, res) => {
 });
 
 // login
-app.get("/login", userAuthentication, (req, res) => {
-    return res.json({ status: true });
-});
+app.get(loginRoutes, userAuthentication);
 
 // sign in
 app.post("/login", (req, res) => {

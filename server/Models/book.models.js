@@ -50,7 +50,7 @@ const Book = {
                 return callback(null, result);
             }
         });
-    }),
+    }),    
     deleteBooks: ((bookID, res) => {
         let removeSql = 'DELETE FROM books_list WHERE book_id = ?';
         connection.query(removeSql, [bookID], (err, result) => {
