@@ -1,4 +1,3 @@
-// models/bookModel.js
 const connection = require('../Config/config');
 
 const Book = {
@@ -36,11 +35,11 @@ const Book = {
             fields.push(`${key} = ?`);
             values.push(value);
         }
+        console.log(fields);
 
         // Join fields with commas for the SQL SET clause
-        const updateSql = `UPDATE books_list SET ${fields.join(', ')} WHERE book_id = ?`;
+        const updateSql = `UPDATE books_list SET ${fields} WHERE book_id = ?`;
 
-        console.log(values); // Debugging
 
         // Execute the query
         connection.query(updateSql, [...values, ID], (err, result) => {
@@ -50,7 +49,7 @@ const Book = {
                 return callback(null, result);
             }
         });
-    }),    
+    }),
     deleteBooks: ((bookID, res) => {
         let removeSql = 'DELETE FROM books_list WHERE book_id = ?';
         connection.query(removeSql, [bookID], (err, result) => {

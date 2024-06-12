@@ -39,7 +39,6 @@ const Login = () => {
       }      
     } catch (error) {
       console.error('Error:', error);
-      setError('An error occurred during login.');
     }
   };
 
@@ -49,7 +48,7 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      let response = await axios.get(`${process.env.REACT_API_BASE_URL}/login/`);
+      let response = await axios.get(`${process.env.REACT_API_BASE_URL}/login`);
       
       if (response.data.status) {
         navigate("/author");

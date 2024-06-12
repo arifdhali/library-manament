@@ -8,9 +8,11 @@ const { v4: uuidv4 } = require("uuid");
 const cookieParser = require("cookie-parser");
 const path = require("path");
 
+const userAuthentication = require('./Auth/login.auth');
 const homeRoutes = require("./Routers/home.routes");
 const bookRoutes = require("./Routers/book.routes");
 const loginRoutes = require("./Routers/login.routes");
+const newAccountRoutes = require("./Routers/newAccount.routes")
 
 const uploadMulter = require("./Utils/multerConfig");
 
@@ -27,26 +29,7 @@ app.use(
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// user authentication || middleware to handle login
-const userAuthentication = (req, res, next) => {
-    const { loginToken } = req.cookies;
-    if (!loginToken) {
-        return res.json({
-            status: false,
-            message: "You don't have account, please register",
-        });
-    } else {
-        jwt.verify(loginToken, "secretKey", (err, decode) => {
-            if (err) {
-                return res.json({ status: false, message: "Invalid token" });
-            } else {
-                req.user = decode.user;
-                logedInUser = decode.user;
-                next();
-            }
-        });
-    }
-};
+
 
 // Home routes
 app.use("/", homeRoutes);
@@ -54,112 +37,29 @@ app.use("/", homeRoutes);
 // Single page Book
 app.use("/book", bookRoutes);
 
+// Login handel
+app.use('/login', loginRoutes)
+
+// Sign up
+app.use("/signup", newAccountRoutes);
+
+
 // Updte book
-let updateBoook = uploadMulter("books");
-app.use("/author/all-books", updateBoook.single('thumbnail'), bookRoutes);
+// let updateBoook = uploadMulter("books");
+// app.use("/author/all-books", updateBoook.single('thumbnail'), bookRoutes);
 
 
 // Delete book
-app.use("/author/all-books", bookRoutes);
-
+// app.use("/author/all-books", bookRoutes);
 
 
 app.get("/author", userAuthentication, (req, res) => {
     return res.json({ status: true, author_data: req.user });
 });
 
-// login
-app.get(loginRoutes, userAuthentication);
 
-// sign in
-app.post("/login", (req, res) => {
-    const { email, password } = req.body;
 
-    const emailQuery = "SELECT * FROM users WHERE email = ?";
-    connection.query(emailQuery, [email], (err, results) => {
-        if (err) {
-            return res.json({ status: false, message: "Server Error" });
-        }
-        if (results.length === 0) {
-            return res.json({ status: false, message: "User not found" });
-        }
-        const user = results[0];
-        bcrypt.compare(password, user.password, (err, result) => {
-            if (err) {
-                return res.json({ status: false, message: err.message });
-            }
-            if (result) {
-                let token = jwt.sign(
-                    {
-                        user,
-                    },
-                    "secretKey",
-                    { expiresIn: "1d" }
-                );
-                res.cookie("loginToken", token);
-                return res.json({ status: true, message: "Login successful" });
-            } else {
-                return res.json({
-                    status: false,
-                    message: "Incorrect email or password.",
-                });
-            }
-        });
-    });
-});
 
-// ADD BOOK
-let uploadProfile = uploadMulter("author"); // Multer upload folder name
-
-// sign up
-app.post("/signup", uploadProfile.single('profile'), (req, res) => {
-    console.log(req.file);
-    if (!req.file) {
-        return res.status(400).json({ status: false, message: "No file uploaded" });
-    }
-    const { filename: user_image } = req.file;
-
-    const { name, email, address, age, phone, gender, country, password } = req.body;
-
-    // Hash the password
-    bcrypt.hash(password, 10, (err, hash) => {
-        if (err) {
-            return res.status(500).json({
-                status: false,
-                message: "Error generating or encrypting password",
-            });
-        }
-
-        // Check if email already exists
-        const checkEmail = "SELECT * FROM users WHERE email = ?";
-        connection.query(checkEmail, [email], (err, result) => {
-            if (err) {
-                return res.status(500).json({ status: false, message: "Error checking email" });
-            }
-
-            if (result.length > 0) {
-                return res.status(400).json({ status: false, message: "Email already exists" });
-            }
-
-            // Insert new user into the database
-            const insertUser =
-                "INSERT INTO users (author_id, user_image, name, email, address, age, phone_number, gender, country, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            connection.query(
-                insertUser,
-                [uuidv4(), user_image, name, email, address, age, phone, gender, country, hash],
-                (err, result) => {
-                    if (err) {
-                        return res.status(500).json({ status: false, message: err.message });
-                    }
-                    return res.status(200).json({
-                        status: true,
-                        message: "Successfully created your account",
-                    });
-                }
-            );
-        });
-    });
-});
 
 // ADD BOOK
 let uploadBooks = uploadMulter("books"); // Multer upload folder name
@@ -209,50 +109,52 @@ app.post(
     }
 );
 
-// All books
-app.get("/author/all-books", userAuthentication, (req, res) => {
-    const { author_id } = req.user;
+// // All books
+// app.get("/author/all-books", userAuthentication, (req, res) => {
+//     const { author_id } = req.user;
 
-    // get all books from this author_id
-    let sql = "SELECT * FROM books_list WHERE user_id = ?";
+//     console.log('test')
 
-    connection.query(sql, [author_id], (err, result) => {
-        if (err) {
-            return res.json({
-                status: false,
-                message: "Error on getting all books informations",
-            });
-        } else {
-            return res.json({
-                status: true,
-                all_books: result,
-            });
-        }
-    });
-});
+//     // get all books from this author_id
+//     let sql = "SELECT * FROM books_list WHERE user_id = ?";
 
-// updaate single row || column
-app.patch("/author/all-books/:id", (req, res) => {
-    const { id } = req.params;
-    const { status } = req.body;
+//     connection.query(sql, [author_id], (err, result) => {
+//         if (err) {
+//             return res.json({
+//                 status: false,
+//                 message: "Error on getting all books informations",
+//             });
+//         } else {
+//             return res.json({
+//                 status: true,
+//                 all_books: result,
+//             });
+//         }
+//     });
+// });
 
-    let updateSql = "UPDATE books_list SET status = ? WHERE book_id = ?";
+// // updaate single row || column
+// app.patch("/author/edit-books/:id", (req, res) => {
+//     const { id } = req.params;
+//     const { status } = req.body;
 
-    connection.query(updateSql, [status, id], (err, result) => {
-        if (err) {
-            return res.status(500).json({
-                status: false,
-                message: "Something went wrong",
-            });
-        } else {
-            console.log(result);
-            return res.status(200).json({
-                status: true,
-                message: "Status updated successfully",
-            });
-        }
-    });
-});
+//     let updateSql = "UPDATE books_list SET status = ? WHERE book_id = ?";
+
+//     connection.query(updateSql, [status, id], (err, result) => {
+//         if (err) {
+//             return res.status(500).json({
+//                 status: false,
+//                 message: "Something went wrong",
+//             });
+//         } else {
+//             console.log(result);
+//             return res.status(200).json({
+//                 status: true,
+//                 message: "Status updated successfully",
+//             });
+//         }
+//     });
+// });
 
 // app logout
 app.get("/logout", (req, res) => {
