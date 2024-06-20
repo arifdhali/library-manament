@@ -17,6 +17,8 @@ const Add_book = () => {
         previewProfile: ""
     });
 
+    
+
     // Success and error toasts
     const successLogin = (message) => toast.success(message);
     const errorLogin = (message) => toast.error(message);
@@ -77,7 +79,7 @@ const Add_book = () => {
 
     // Destructuring the obj from addBook
     const { title, authors, publication, plot, themes, impact, legacy, thumbnail, previewProfile, price } = addBook;
-
+    console.log(addBook)
     return (
         <>
             <Author_module />

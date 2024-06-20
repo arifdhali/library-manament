@@ -19,7 +19,6 @@ const AllBooks = () => {
         try {
             const response = await axios.get(`${process.env.REACT_API_BASE_URL}/author/all-books`);
             if (response.status === 200) {
-
                 let books = response.data.all_books.map((book) => {
                     return {
                         ...book,
@@ -39,6 +38,7 @@ const AllBooks = () => {
 
     const handleStatus = async (e, book_id) => {
         const { value } = e.target;
+        console.log(value);
         try {
             const response = await axios.patch(`${process.env.REACT_API_BASE_URL}/author/all-books/${book_id}`, {
                 status: value
@@ -153,7 +153,7 @@ const AllBooks = () => {
                             })
                         ) : (
                             <tr>
-                                <td colSpan={5} className="border py-2 px-8 border-slate-300 text-center text-xl text-red-600 text-600">No Book available</td>
+                                <td colSpan={6} className="border py-2 px-8 border-slate-300 text-center text-xl text-red-600 text-600">No Book available</td>
                             </tr>
                         )}
                     </tbody>

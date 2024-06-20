@@ -18,8 +18,9 @@ const AuthorContextProvider = ({ children }) => {
             const response = await axios.get(`${process.env.REACT_API_BASE_URL}/author/`);
             if (response.data.status) {
                 setLogin(response.data.status);
-                const { author_id, name,user_image } = response.data.author_data;
-                setUserinfo({ author_id, name ,user_image});
+                const { author_id , name, user_image } = response.data.author_data;
+                setUserinfo({ author_id, name, user_image });
+
             } else {
                 navigate('/login');
             }
@@ -32,7 +33,8 @@ const AuthorContextProvider = ({ children }) => {
     const getAllBooks = async () => {
         try {
             const response = await axios.get(`${process.env.REACT_API_BASE_URL}/author/all-books`);
-            let { status, all_books } = response.data;
+            console.log(response)
+                let { status, all_books } = response.data;
             if (status) {
                 setBookCount(all_books.length);
             }

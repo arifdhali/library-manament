@@ -14,6 +14,7 @@ const loginController = {
             if (results.length === 0) {
                 return res.json({ status: false, message: "User not found" });
             }
+
             const user = results[0];
             bcrypt.compare(password, user.password, (err, result) => {
                 if (err) {
@@ -21,7 +22,7 @@ const loginController = {
                 }
                 if (result) {
                     let token = jwt.sign(
-                        { user: { id: user.id } },
+                        { user: user },
                         "secretKey",
                         { expiresIn: "1d" }
                     );

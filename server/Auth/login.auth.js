@@ -9,7 +9,7 @@ const userAuthentication = (req, res, next) => {
             message: "You don't have an account, please register",
         });
     } else {
-        jwt.verify(loginToken, "secretKey", (err, decode) => {
+        jwt.verify(loginToken, "secretKey", (err, decode) => {            
             if (err) {
                 return res.status(403).json({ status: false, message: "Invalid token" });
             } else {
@@ -19,5 +19,4 @@ const userAuthentication = (req, res, next) => {
         });
     }
 };
-
 module.exports = userAuthentication;
